@@ -73,11 +73,15 @@ export default function ProfileMenu() {
     router.push(path);
   };
 
+  const hardGoTo = (path: string) => {
+    setOpen(false);
+    window.location.href = path;
+  };
+
   const handleLogout = async () => {
     setOpen(false);
     await supabase.auth.signOut();
-    router.push('/auth/login');
-    router.refresh();
+    window.location.href = '/auth/login';
   };
 
   return (
@@ -162,8 +166,8 @@ export default function ProfileMenu() {
 
           <div style={{ display: 'grid', gap: '8px' }}>
             <button onClick={() => goTo('/profile')} style={menuButtonStyle}>Profile</button>
-            <button onClick={() => goTo('/dashboard')} style={menuButtonStyle}>Candidate Dashboard</button>
-            <button onClick={() => goTo('/recruiter/dashboard')} style={menuButtonStyle}>Recruiter Dashboard</button>
+            <button onClick={() => hardGoTo('/dashboard')} style={menuButtonStyle}>Candidate Dashboard</button>
+            <button onClick={() => hardGoTo('/recruiter/dashboard')} style={menuButtonStyle}>Recruiter Dashboard</button>
             <button onClick={() => goTo('/messages')} style={menuButtonStyle}>Messages</button>
             <button onClick={handleLogout} style={menuButtonStyle}>Logout</button>
           </div>
