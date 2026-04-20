@@ -1,6 +1,5 @@
 ﻿'use client';
 
-import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
@@ -69,7 +68,13 @@ export default function ProfileMenu() {
     .slice(0, 2)
     .toUpperCase();
 
+  const goTo = (path: string) => {
+    setOpen(false);
+    router.push(path);
+  };
+
   const handleLogout = async () => {
+    setOpen(false);
     await supabase.auth.signOut();
     router.push('/auth/login');
     router.refresh();
@@ -156,11 +161,11 @@ export default function ProfileMenu() {
           </div>
 
           <div style={{ display: 'grid', gap: '8px' }}>
-            <Link href="/profile" style={linkStyle}>Profile</Link>
-            <Link href="/dashboard" style={linkStyle}>Candidate Dashboard</Link>
-            <Link href="/recruiter/dashboard" style={linkStyle}>Recruiter Dashboard</Link>
-            <Link href="/messages" style={linkStyle}>Messages</Link>
-            <button onClick={handleLogout} style={logoutStyle}>Logout</button>
+            <button onClick={() => goTo('/profile')} style={menuButtonStyle}>Profile</button>
+            <button onClick={() => goTo('/dashboard')} style={menuButtonStyle}>Candidate Dashboard</button>
+            <button onClick={() => goTo('/recruiter/dashboard')} style={menuButtonStyle}>Recruiter Dashboard</button>
+            <button onClick={() => goTo('/messages')} style={menuButtonStyle}>Messages</button>
+            <button onClick={handleLogout} style={menuButtonStyle}>Logout</button>
           </div>
         </div>
       )}
@@ -168,20 +173,7 @@ export default function ProfileMenu() {
   );
 }
 
-const linkStyle: React.CSSProperties = {
-  display: 'block',
-  textDecoration: 'none',
-  color: '#f8fafc',
-  padding: '12px 14px',
-  border: '1px solid rgba(255,255,255,0.08)',
-  background: 'rgba(255,255,255,0.02)',
-  fontWeight: 700,
-  fontSize: '12px',
-  textTransform: 'uppercase',
-  letterSpacing: '0.08em',
-};
-
-const logoutStyle: React.CSSProperties = {
+const menuButtonStyle: React.CSSProperties = {
   display: 'block',
   width: '100%',
   textAlign: 'left',
