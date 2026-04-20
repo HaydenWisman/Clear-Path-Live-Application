@@ -76,12 +76,7 @@ export default function ProfileMenu() {
   };
 
   return (
-    <div
-      ref={menuRef}
-      style={{
-        position: 'relative',
-      }}
-    >
+    <div style={{ position: 'relative' }} ref={menuRef}>
       <button
         onClick={() => setOpen((prev) => !prev)}
         style={{
@@ -165,10 +160,7 @@ export default function ProfileMenu() {
             <Link href="/dashboard" style={linkStyle}>Candidate Dashboard</Link>
             <Link href="/recruiter/dashboard" style={linkStyle}>Recruiter Dashboard</Link>
             <Link href="/messages" style={linkStyle}>Messages</Link>
-
-            <button onClick={handleLogout} style={logoutStyle}>
-              Logout
-            </button>
+            <button onClick={handleLogout} style={logoutStyle}>Logout</button>
           </div>
         </div>
       )}

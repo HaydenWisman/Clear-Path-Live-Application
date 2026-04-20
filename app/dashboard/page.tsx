@@ -298,6 +298,15 @@ export default function DashboardPage() {
       >
         <div
           style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginBottom: '20px',
+          }}
+        >
+          <ProfileMenu />
+        </div>
+        <div
+          style={{
             display: 'grid',
             gridTemplateColumns: '1.1fr 0.9fr',
             gap: '40px',
@@ -882,4 +891,5 @@ export default function DashboardPage() {
     </main>
   );
 }
+
 

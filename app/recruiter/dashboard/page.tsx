@@ -110,6 +110,15 @@ export default function RecruiterDashboardPage() {
         </div>
         <div
           style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginBottom: '20px',
+          }}
+        >
+          
+        </div>
+        <div
+          style={{
             display: 'grid',
             gridTemplateColumns: '1.1fr 0.9fr',
             gap: '40px',
@@ -412,4 +421,5 @@ export default function RecruiterDashboardPage() {
     </main>
   );
 }
+
 
