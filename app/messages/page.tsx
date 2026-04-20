@@ -488,8 +488,39 @@ export default function MessagesPage() {
     </Suspense>
   );
 }
+cd C:\Users\Owner\clear-path-v3
+@'
+'use client';
 
-export default function MessagesPage() {
+import { Suspense, useEffect, useState } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import { useSearchParams } from 'next/navigation';
+
+type Message = {
+  id: string;
+  content: string;
+  sender_id: string;
+  created_at: string;
+  read_by?: string[] | null;
+};
+
+type Profile = {
+  id: string;
+  full_name: string | null;
+  role: string | null;
+  company: string | null;
+  avatar_url: string | null;
+};
+
+type InboxConversation = {
+  id: string;
+  created_at: string;
+  otherUser: Profile | null;
+  lastMessage: string;
+  unreadCount: number;
+};
+
+function MessagesPageContent() {
   const supabase = createClient();
   const searchParams = useSearchParams();
   const requestedConversation = searchParams.get('conversation');
@@ -609,7 +640,7 @@ export default function MessagesPage() {
     };
 
     loadUserAndInbox();
-  }, [supabase, requestedConversation]);
+  }, [requestedConversation]);
 
   useEffect(() => {
     const loadMessages = async () => {
@@ -647,7 +678,7 @@ export default function MessagesPage() {
     };
 
     loadMessages();
-  }, [selectedConversation, supabase, userId]);
+  }, [selectedConversation, userId]);
 
   useEffect(() => {
     const searchProfiles = async () => {
@@ -679,7 +710,7 @@ export default function MessagesPage() {
     if (userId) {
       searchProfiles();
     }
-  }, [searchTerm, userId, supabase]);
+  }, [searchTerm, userId]);
 
   const startConversation = async (targetUserId: string) => {
     setError('');
@@ -939,5 +970,13 @@ export default function MessagesPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function MessagesPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#020406', color: '#f8fafc', padding: '32px', fontFamily: 'Arial, sans-serif' }}>Loading messages...</div>}>
+      <MessagesPageContent />
+    </Suspense>
   );
 }
