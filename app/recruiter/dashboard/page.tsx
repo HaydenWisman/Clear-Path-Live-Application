@@ -1,4 +1,5 @@
 ﻿'use client';
+import ProfileMenu from '@/components/ProfileMenu';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -98,6 +99,15 @@ export default function RecruiterDashboardPage() {
           padding: '56px 32px 70px',
         }}
       >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            marginBottom: '20px',
+          }}
+        >
+          <ProfileMenu />
+        </div>
         <div
           style={{
             display: 'grid',
@@ -402,3 +412,4 @@ export default function RecruiterDashboardPage() {
     </main>
   );
 }
+
