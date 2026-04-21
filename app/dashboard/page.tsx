@@ -1,6 +1,6 @@
 ﻿'use client';
-import ProfileMenu from '@/components/ProfileMenu';
 
+import ProfileMenu from '@/components/ProfileMenu';
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
@@ -22,6 +22,17 @@ function getGreetingForHour(hour: number) {
   if (hour < 12) return 'Good morning';
   if (hour < 18) return 'Good afternoon';
   return 'Good evening';
+}
+
+function groupCounts(items: string[]) {
+  const counts: Record<string, number> = {};
+  for (const item of items) {
+    const key = item?.trim() || 'Unknown';
+    counts[key] = (counts[key] || 0) + 1;
+  }
+  return Object.entries(counts)
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count);
 }
 
 export default function DashboardPage() {
@@ -118,7 +129,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     loadDashboardData();
-  }, [supabase]);
+  }, []);
 
   const guessCompanyFromUrl = (url: string) => {
     try {
@@ -216,51 +227,22 @@ export default function DashboardPage() {
     await loadDashboardData();
   };
 
-  const topApplications = applications.slice(0, 6);
-
-  const getProgress = (status: string) => {
-    switch (status) {
-      case 'offer':
-        return 94;
-      case 'interview':
-        return 82;
-      case 'under_review':
-        return 51;
-      case 'submitted':
-        return 33;
-      case 'withdrawn':
-        return 20;
-      case 'rejected':
-        return 15;
-      default:
-        return 25;
-    }
-  };
-
-  const getStageLabel = (status: string) => {
-    switch (status) {
-      case 'offer':
-        return 'Offer';
-      case 'interview':
-        return 'Interview';
-      case 'under_review':
-        return 'Under Review';
-      case 'submitted':
-        return 'Submitted';
-      case 'withdrawn':
-        return 'Withdrawn';
-      case 'rejected':
-        return 'Rejected';
-      default:
-        return status;
-    }
-  };
-
   const totalApplications = applications.length;
-  const advancing = applications.filter((a) =>
-    ['interview', 'offer', 'under_review'].includes(a.status)
+  const distinctCompanies = new Set(
+    applications.map((a) => a.jobs?.company || 'Unknown')
+  ).size;
+  const interviewCount = applications.filter((a) =>
+    ['interview', 'interview_scheduled'].includes((a.status || '').toLowerCase())
   ).length;
-  const matchSignal = totalApplications > 0 ? 82 : 0;
+  const offerCount = applications.filter((a) =>
+    ['offer', 'offered'].includes((a.status || '').toLowerCase())
+  ).length;
+
+  const companyCounts = groupCounts(applications.map((a) => a.jobs?.company || 'Unknown')).slice(0, 6);
+  const locationCounts = groupCounts(applications.map((a) => a.jobs?.location || 'Unknown')).slice(0, 6);
+  const statusCounts = groupCounts(applications.map((a) => a.status || 'unknown'));
+  const sourceCounts = groupCounts(applications.map((a) => a.source || 'Unknown'));
+  const recentApplications = applications.slice(0, 8);
 
   const chipStyle: React.CSSProperties = {
     padding: '10px 14px',
@@ -278,6 +260,12 @@ export default function DashboardPage() {
     border: '1px solid rgba(255,255,255,0.08)',
     background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))',
     padding: '18px',
+  };
+
+  const panelStyle: React.CSSProperties = {
+    border: '1px solid rgba(255,255,255,0.08)',
+    background: 'linear-gradient(180deg, rgba(9,12,18,0.98), rgba(5,8,13,0.98))',
+    padding: '22px',
   };
 
   return (
@@ -305,6 +293,7 @@ export default function DashboardPage() {
         >
           <ProfileMenu />
         </div>
+
         <div
           style={{
             display: 'grid',
@@ -326,7 +315,7 @@ export default function DashboardPage() {
                 letterSpacing: '0.14em',
               }}
             >
-              Candidate Surface
+              Candidate Analytics Surface
             </div>
 
             <h1
@@ -365,23 +354,20 @@ export default function DashboardPage() {
                 margin: '0 0 24px',
               }}
             >
-              Your live command view for application progress, recruiting activity,
-              and next-step momentum.
+              See how your search is performing across companies, locations, sources,
+              and status changes from one command dashboard.
             </p>
 
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '28px' }}>
               <a href="https://www.linkedin.com/login" target="_blank" rel="noreferrer" style={chipStyle}>
                 LinkedIn
               </a>
-
               <a href="https://secure.indeed.com/account/login" target="_blank" rel="noreferrer" style={chipStyle}>
                 Indeed
               </a>
-
               <a href="https://app.joinhandshake.com/login" target="_blank" rel="noreferrer" style={chipStyle}>
                 Handshake
               </a>
-
               <button
                 onClick={() => setShowDirectForm(!showDirectForm)}
                 style={{ ...chipStyle, cursor: 'pointer' }}
@@ -529,10 +515,10 @@ export default function DashboardPage() {
               }}
             >
               {[
-                { label: 'Tracked Applications', value: totalApplications },
-                { label: 'Advancing', value: advancing },
-                { label: 'Unread Messages', value: unreadMessagesCount },
-                { label: 'Match Signal', value: `${matchSignal}%` },
+                { label: 'Total Applications', value: totalApplications },
+                { label: 'Companies Applied To', value: distinctCompanies },
+                { label: 'Interviews', value: interviewCount },
+                { label: 'Offers', value: offerCount },
               ].map((item) => (
                 <div key={item.label} style={metricCardStyle}>
                   <div
@@ -580,7 +566,7 @@ export default function DashboardPage() {
                   marginBottom: '18px',
                 }}
               >
-                Live Mission Snapshot
+                Live Application Snapshot
               </div>
 
               <div
@@ -594,7 +580,7 @@ export default function DashboardPage() {
               >
                 {totalApplications} active
                 <br />
-                tracked roles
+                application records
               </div>
 
               <div
@@ -604,7 +590,8 @@ export default function DashboardPage() {
                   marginBottom: '24px',
                 }}
               >
-                Last application activity synced through your dashboard.
+                Review where you apply most, which companies dominate your search,
+                and how your pipeline is progressing.
               </div>
 
               <div
@@ -635,261 +622,219 @@ export default function DashboardPage() {
                   letterSpacing: '0.08em',
                 }}
               >
-                <span>Applied</span>
-                <span>Onboarding trajectory active</span>
+                <span>Search Active</span>
+                <span>Visibility Enabled</span>
               </div>
             </div>
           </div>
         </div>
 
-        <div
-          style={{
-            border: '1px solid rgba(255,255,255,0.08)',
-            background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))',
-            padding: '18px',
-            marginBottom: '28px',
-          }}
-        >
-          <div
-            style={{
-              color: '#94a3b8',
-              fontSize: '11px',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.12em',
-              marginBottom: '14px',
-            }}
-          >
-            Action Bar
-          </div>
-
-          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-            <Link
-              href="/jobs"
+        {loading ? (
+          <p style={{ color: '#94a3b8' }}>Loading analytics...</p>
+        ) : (
+          <>
+            <div
               style={{
-                background: '#ffffff',
-                color: '#020406',
-                textDecoration: 'none',
-                padding: '14px 20px',
-                fontWeight: 800,
-                fontSize: '12px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                border: '1px solid #ffffff',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                gap: '18px',
+                marginBottom: '18px',
               }}
             >
-              Browse Jobs
-            </Link>
+              <div style={panelStyle}>
+                <div style={panelHeading}>Applications by Company</div>
+                <div style={{ display: 'grid', gap: '10px' }}>
+                  {companyCounts.length === 0 ? (
+                    <div style={emptyStyle}>No company data yet.</div>
+                  ) : (
+                    companyCounts.map((item) => (
+                      <div key={item.label} style={rowStyle}>
+                        <span>{item.label}</span>
+                        <strong>{item.count}</strong>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
 
-            {[
-              { href: '/recommended-jobs', label: 'Recommended Jobs' },
-              { href: '/resume-match', label: 'Resume Match' },
-              { href: '/resume-builder', label: 'Resume Builder' },
-              { href: '/messages', label: 'Messages' },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
+              <div style={panelStyle}>
+                <div style={panelHeading}>Applications by Location</div>
+                <div style={{ display: 'grid', gap: '10px' }}>
+                  {locationCounts.length === 0 ? (
+                    <div style={emptyStyle}>No location data yet.</div>
+                  ) : (
+                    locationCounts.map((item) => (
+                      <div key={item.label} style={rowStyle}>
+                        <span>{item.label}</span>
+                        <strong>{item.count}</strong>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              <div style={panelStyle}>
+                <div style={panelHeading}>Applications by Status</div>
+                <div style={{ display: 'grid', gap: '10px' }}>
+                  {statusCounts.length === 0 ? (
+                    <div style={emptyStyle}>No status data yet.</div>
+                  ) : (
+                    statusCounts.map((item) => (
+                      <div key={item.label} style={rowStyle}>
+                        <span>{item.label}</span>
+                        <strong>{item.count}</strong>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+
+              <div style={panelStyle}>
+                <div style={panelHeading}>Applications by Source</div>
+                <div style={{ display: 'grid', gap: '10px' }}>
+                  {sourceCounts.length === 0 ? (
+                    <div style={emptyStyle}>No source data yet.</div>
+                  ) : (
+                    sourceCounts.map((item) => (
+                      <div key={item.label} style={rowStyle}>
+                        <span>{item.label}</span>
+                        <strong>{item.count}</strong>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div style={panelStyle}>
+              <div
                 style={{
-                  background: 'transparent',
-                  color: '#f8fafc',
-                  textDecoration: 'none',
-                  padding: '14px 20px',
-                  fontWeight: 800,
-                  fontSize: '12px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                  border: '1px solid rgba(255,255,255,0.16)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: '16px',
+                  marginBottom: '16px',
                 }}
               >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
+                <div style={panelHeading}>Recent Applications</div>
 
-        {loading ? (
-          <p style={{ color: '#94a3b8' }}>Loading applications...</p>
-        ) : (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-              gap: '18px',
-            }}
-          >
-            {topApplications.map((application) => {
-              const progress = getProgress(application.status);
-              const stage = getStageLabel(application.status);
-
-              return (
-                <div
-                  key={application.id}
-                  style={{
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    background: 'linear-gradient(180deg, rgba(9,12,18,0.98), rgba(5,8,13,0.98))',
-                    padding: '22px',
-                    minHeight: '270px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                  }}
-                >
-                  <div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'start',
-                        gap: '12px',
-                        marginBottom: '18px',
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: '52px',
-                          height: '52px',
-                          border: '1px solid rgba(255,255,255,0.12)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontWeight: 800,
-                          color: '#ffffff',
-                          background: 'rgba(255,255,255,0.03)',
-                        }}
-                      >
-                        {(application.jobs?.company || 'C').charAt(0)}
-                      </div>
-
-                      <div
-                        style={{
-                          color: '#94a3b8',
-                          fontSize: '11px',
-                          fontWeight: 700,
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.1em',
-                        }}
-                      >
-                        {new Date(application.applied_at).toLocaleDateString()}
-                      </div>
-                    </div>
-
-                    <div
-                      style={{
-                        fontSize: '28px',
-                        fontWeight: 800,
-                        lineHeight: 1.05,
-                        letterSpacing: '-0.03em',
-                        marginBottom: '6px',
-                      }}
-                    >
-                      {application.jobs?.title || 'Application'}
-                    </div>
-
-                    <div
-                      style={{
-                        color: '#cbd5e1',
-                        fontSize: '16px',
-                        marginBottom: '12px',
-                      }}
-                    >
-                      {application.jobs?.company || '-'}
-                    </div>
-
-                    <div
-                      style={{
-                        color: '#94a3b8',
-                        fontSize: '13px',
-                        lineHeight: 1.5,
-                        marginBottom: '18px',
-                      }}
-                    >
-                      {application.jobs?.location || 'Location unavailable'} • Applied via {application.source || 'Direct'}
-                    </div>
-                  </div>
-
-                  <div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        color: '#cbd5e1',
-                        fontSize: '11px',
-                        fontWeight: 700,
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.1em',
-                        marginBottom: '8px',
-                      }}
-                    >
-                      <span>{stage}</span>
-                      <span>{progress}%</span>
-                    </div>
-
-                    <div
-                      style={{
-                        height: '8px',
-                        background: 'rgba(255,255,255,0.08)',
-                        overflow: 'hidden',
-                        marginBottom: '18px',
-                      }}
-                    >
-                      <div
-                        style={{
-                          width: `${progress}%`,
-                          height: '100%',
-                          background: '#ffffff',
-                        }}
-                      />
-                    </div>
-
-                    <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-                      <Link
-                        href={`/applications/${application.id}`}
-                        style={{
-                          display: 'inline-block',
-                          color: '#ffffff',
-                          textDecoration: 'none',
-                          fontSize: '12px',
-                          fontWeight: 800,
-                          textTransform: 'uppercase',
-                          letterSpacing: '0.1em',
-                          borderBottom: '1px solid rgba(255,255,255,0.22)',
-                          paddingBottom: '4px',
-                        }}
-                      >
-                        View Transparency Timeline
-                      </Link>
-
-                      {application.job_url && (
-                        <a
-                          href={application.job_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          style={{
-                            display: 'inline-block',
-                            color: '#cbd5e1',
-                            textDecoration: 'none',
-                            fontSize: '12px',
-                            fontWeight: 800,
-                            textTransform: 'uppercase',
-                            letterSpacing: '0.1em',
-                            borderBottom: '1px solid rgba(255,255,255,0.12)',
-                            paddingBottom: '4px',
-                          }}
-                        >
-                          Open Job Posting
-                        </a>
-                      )}
-                    </div>
-                  </div>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                  <Link href="/jobs" style={actionLinkPrimary}>Browse Jobs</Link>
+                  <Link href="/recommended-jobs" style={actionLink}>Recommended Jobs</Link>
+                  <Link href="/resume-match" style={actionLink}>Resume Match</Link>
+                  <Link href="/resume-builder" style={actionLink}>Resume Builder</Link>
+                  <Link href="/messages" style={actionLink}>Messages</Link>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+
+              {recentApplications.length === 0 ? (
+                <div style={emptyStyle}>No applications yet.</div>
+              ) : (
+                <div style={{ overflowX: 'auto' }}>
+                  <table
+                    style={{
+                      width: '100%',
+                      borderCollapse: 'collapse',
+                      color: '#f8fafc',
+                    }}
+                  >
+                    <thead>
+                      <tr>
+                        {['Company', 'Role', 'Location', 'Source', 'Status', 'Applied'].map((heading) => (
+                          <th
+                            key={heading}
+                            style={{
+                              textAlign: 'left',
+                              padding: '12px 10px',
+                              borderBottom: '1px solid rgba(255,255,255,0.08)',
+                              color: '#94a3b8',
+                              fontSize: '11px',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.12em',
+                            }}
+                          >
+                            {heading}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {recentApplications.map((application) => (
+                        <tr key={application.id}>
+                          <td style={cellStyle}>{application.jobs?.company || 'Unknown'}</td>
+                          <td style={cellStyle}>{application.jobs?.title || 'Unknown'}</td>
+                          <td style={cellStyle}>{application.jobs?.location || 'Unknown'}</td>
+                          <td style={cellStyle}>{application.source || 'Unknown'}</td>
+                          <td style={cellStyle}>{application.status || 'Unknown'}</td>
+                          <td style={cellStyle}>
+                            {application.applied_at
+                              ? new Date(application.applied_at).toLocaleDateString()
+                              : 'Unknown'}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </>
         )}
       </section>
     </main>
   );
 }
 
+const panelHeading: React.CSSProperties = {
+  color: '#94a3b8',
+  fontSize: '11px',
+  fontWeight: 700,
+  textTransform: 'uppercase',
+  letterSpacing: '0.12em',
+  marginBottom: '14px',
+};
 
+const rowStyle: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  gap: '12px',
+  padding: '12px 0',
+  borderBottom: '1px solid rgba(255,255,255,0.06)',
+  color: '#e2e8f0',
+};
+
+const emptyStyle: React.CSSProperties = {
+  color: '#94a3b8',
+  padding: '12px 0',
+};
+
+const cellStyle: React.CSSProperties = {
+  padding: '12px 10px',
+  borderBottom: '1px solid rgba(255,255,255,0.06)',
+  color: '#e2e8f0',
+  fontSize: '14px',
+};
+
+const actionLinkPrimary: React.CSSProperties = {
+  background: '#ffffff',
+  color: '#020406',
+  textDecoration: 'none',
+  padding: '12px 16px',
+  fontWeight: 800,
+  fontSize: '12px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
+  border: '1px solid #ffffff',
+};
+
+const actionLink: React.CSSProperties = {
+  background: 'transparent',
+  color: '#f8fafc',
+  textDecoration: 'none',
+  padding: '12px 16px',
+  fontWeight: 800,
+  fontSize: '12px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
+  border: '1px solid rgba(255,255,255,0.16)',
+};
