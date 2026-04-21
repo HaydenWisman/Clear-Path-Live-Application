@@ -2,249 +2,155 @@
 
 import Link from 'next/link';
 
-const navItems = [
-  'Candidate Experience',
-  'Recruiter / HR Dashboard',
-  'Executive Metrics',
-];
-
 export default function HomePage() {
   return (
     <main
       style={{
         minHeight: '100vh',
-        background: 'linear-gradient(180deg, #020406 0%, #05080d 30%, #0a1017 100%)',
+        background: 'linear-gradient(180deg, #020406 0%, #05080d 35%, #0a1017 100%)',
         color: '#f8fafc',
         fontFamily: 'Arial, sans-serif',
       }}
     >
-      <div
-        style={{
-          borderBottom: '1px solid rgba(255,255,255,0.08)',
-          position: 'sticky',
-          top: 0,
-          zIndex: 20,
-          backdropFilter: 'blur(8px)',
-          background: 'rgba(2,4,6,0.78)',
-        }}
-      >
-        <div
-          style={{
-            maxWidth: '1440px',
-            margin: '0 auto',
-            padding: '20px 32px',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            gap: '18px',
-            flexWrap: 'wrap',
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '28px', flexWrap: 'wrap' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-              <div
-                style={{
-                  width: '18px',
-                  height: '18px',
-                  borderRadius: '3px',
-                  background: '#ffffff',
-                }}
-              />
-              <div style={{ fontSize: '28px', fontWeight: 700, letterSpacing: '-0.03em' }}>
-                ClearPath
-              </div>
-            </div>
-
-            <nav
-              style={{
-                display: 'flex',
-                gap: '28px',
-                flexWrap: 'wrap',
-                color: '#cbd5e1',
-                fontSize: '13px',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-              }}
-            >
-              {navItems.map((item) => (
-                <span key={item}>{item}</span>
-              ))}
-            </nav>
-          </div>
-
-          <div style={{ display: 'flex', gap: '12px', alignItems: 'center', flexWrap: 'wrap' }}>
-            <Link
-              href="/auth/login"
-              style={{
-                color: '#e2e8f0',
-                textDecoration: 'none',
-                padding: '12px 18px',
-                border: '1px solid rgba(255,255,255,0.14)',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                fontSize: '12px',
-              }}
-            >
-              Log In
-            </Link>
-
-            <Link
-              href="/auth/signup"
-              style={{
-                color: '#020406',
-                background: '#ffffff',
-                textDecoration: 'none',
-                padding: '12px 18px',
-                fontWeight: 800,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                fontSize: '12px',
-              }}
-            >
-              Launch Demo
-            </Link>
-          </div>
-        </div>
-      </div>
-
       <section
         style={{
           maxWidth: '1440px',
           margin: '0 auto',
-          padding: '88px 32px 72px',
-          display: 'grid',
-          gridTemplateColumns: '1.15fr 0.85fr',
-          gap: '48px',
-          alignItems: 'center',
+          padding: '40px 32px 80px',
         }}
       >
-        <div>
-          <div
-            style={{
-              display: 'inline-block',
-              marginBottom: '22px',
-              color: '#94a3b8',
-              fontSize: '12px',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.14em',
-            }}
-          >
-            Application Command Layer
-          </div>
-
-          <h1
-            style={{
-              fontSize: '100px',
-              lineHeight: 0.9,
-              letterSpacing: '-0.06em',
-              margin: '0 0 28px',
-              fontWeight: 800,
-              maxWidth: '980px',
-            }}
-          >
-            One system.
-            <br />
-            Total visibility.
-            <br />
-            Zero guesswork.
-          </h1>
-
-          <p
-            style={{
-              fontSize: '28px',
-              lineHeight: 1.35,
-              color: '#cbd5e1',
-              maxWidth: '900px',
-              margin: '0 0 34px',
-            }}
-          >
-            Track every application, every status change, every recruiter touchpoint,
-            and every match signal from a single operating surface.
-          </p>
-
-          <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', marginBottom: '34px' }}>
-            <Link
-              href="/auth/signup"
+        <header
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: '20px',
+            marginBottom: '56px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <div>
+            <div
               style={{
-                background: '#ffffff',
-                color: '#020406',
-                textDecoration: 'none',
-                padding: '18px 26px',
+                fontSize: '14px',
                 fontWeight: 800,
-                fontSize: '13px',
+                letterSpacing: '0.18em',
                 textTransform: 'uppercase',
-                letterSpacing: '0.08em',
+                color: '#ffffff',
               }}
             >
-              Enter Candidate Demo
-            </Link>
-
-            <Link
-              href="/auth/login"
+              ClearPath
+            </div>
+            <div
               style={{
-                background: 'transparent',
-                color: '#f8fafc',
-                textDecoration: 'none',
-                padding: '18px 26px',
-                fontWeight: 800,
-                fontSize: '13px',
+                marginTop: '6px',
+                color: '#94a3b8',
+                fontSize: '12px',
+                letterSpacing: '0.10em',
                 textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                border: '1px solid rgba(255,255,255,0.16)',
               }}
             >
-              Open Login
+              Candidate + Recruiter Visibility Platform
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <Link href="/auth/login" style={navLinkStyle}>
+              Log In
+            </Link>
+            <Link href="/auth/signup" style={primaryNavLinkStyle}>
+              Create Account
             </Link>
           </div>
+        </header>
 
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-              gap: '14px',
-            }}
-          >
-            {[
-              { label: 'Tracked Applications', value: '12' },
-              { label: 'Advancing', value: '4' },
-              { label: 'Unread Messages', value: '3' },
-              { label: 'Match Signal', value: '82%' },
-            ].map((item) => (
-              <div
-                key={item.label}
-                style={{
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))',
-                  padding: '18px',
-                }}
-              >
-                <div
-                  style={{
-                    color: '#94a3b8',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.12em',
-                    marginBottom: '10px',
-                  }}
-                >
-                  {item.label}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '1.1fr 0.9fr',
+            gap: '44px',
+            alignItems: 'start',
+            marginBottom: '44px',
+          }}
+        >
+          <div>
+            <div
+              style={{
+                display: 'inline-block',
+                marginBottom: '18px',
+                color: '#94a3b8',
+                fontSize: '12px',
+                fontWeight: 700,
+                textTransform: 'uppercase',
+                letterSpacing: '0.14em',
+              }}
+            >
+              Portfolio Build • Live Product Demo
+            </div>
+
+            <h1
+              style={{
+                fontSize: '92px',
+                lineHeight: 0.92,
+                letterSpacing: '-0.06em',
+                margin: '0 0 18px',
+                fontWeight: 800,
+                maxWidth: '920px',
+              }}
+            >
+              One system.
+              <br />
+              Total visibility.
+              <br />
+              Zero guesswork.
+            </h1>
+
+            <p
+              style={{
+                color: '#cbd5e1',
+                fontSize: '24px',
+                lineHeight: 1.45,
+                maxWidth: '840px',
+                margin: '0 0 26px',
+              }}
+            >
+              ClearPath is a full-stack hiring visibility platform designed for both
+              candidates and recruiters. Candidates gain real-time transparency into
+              their pipeline. Recruiters gain structured analytics across roles,
+              applicants, locations, and hiring momentum.
+            </p>
+
+            <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginBottom: '28px' }}>
+              <Link href="/auth/signup" style={heroPrimaryButton}>
+                Launch Platform
+              </Link>
+              <Link href="/recruiter/dashboard?demo=1" style={heroSecondaryButton}>
+                View Recruiter Demo
+              </Link>
+              <Link href="/dashboard" style={heroSecondaryButton}>
+                Candidate Dashboard
+              </Link>
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              {[
+                'Next.js',
+                'Supabase',
+                'Railway',
+                'Analytics Dashboards',
+                'Candidate Transparency',
+                'Recruiter Demo Mode',
+              ].map((item) => (
+                <div key={item} style={chipStyle}>
+                  {item}
                 </div>
-                <div style={{ fontSize: '34px', fontWeight: 800, letterSpacing: '-0.04em' }}>
-                  {item.value}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div>
           <div
             style={{
-              border: '1px solid rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255,255,255,0.10)',
               background: '#05080d',
               padding: '22px',
               boxShadow: '0 24px 80px rgba(0,0,0,0.45)',
@@ -253,82 +159,295 @@ export default function HomePage() {
             <div
               style={{
                 border: '1px solid rgba(255,255,255,0.08)',
-                padding: '28px',
                 background: 'linear-gradient(180deg, #070b12 0%, #03060b 100%)',
+                padding: '28px',
               }}
             >
-              <div
-                style={{
-                  color: '#94a3b8',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.12em',
-                  marginBottom: '18px',
-                }}
-              >
-                Live Mission Snapshot
-              </div>
+              <div style={eyebrowStyle}>Platform Snapshot</div>
 
               <div
                 style={{
-                  fontSize: '54px',
+                  fontSize: '56px',
                   fontWeight: 800,
                   letterSpacing: '-0.05em',
                   lineHeight: 0.95,
-                  marginBottom: '12px',
+                  marginBottom: '14px',
                 }}
               >
-                12 active
+                Built to feel
                 <br />
-                tracked roles
+                like a real SaaS
               </div>
 
-              <div
+              <p
                 style={{
                   color: '#cbd5e1',
                   fontSize: '18px',
-                  marginBottom: '24px',
+                  lineHeight: 1.6,
+                  margin: '0 0 24px',
                 }}
               >
-                Last application recorded 41 minutes ago via LinkedIn.
-              </div>
+                ClearPath combines live authentication, recruiter analytics,
+                candidate job tracking, messaging, resume tooling, and a polished
+                command-center UI into a production-ready portfolio project.
+              </p>
 
-              <div
-                style={{
-                  height: '10px',
-                  background: 'rgba(255,255,255,0.08)',
-                  marginBottom: '10px',
-                  overflow: 'hidden',
-                }}
-              >
-                <div
-                  style={{
-                    width: '78%',
-                    height: '100%',
-                    background: '#ffffff',
-                  }}
-                />
-              </div>
-
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  color: '#94a3b8',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                }}
-              >
-                <span>Applied</span>
-                <span>Onboarding trajectory: 9 days</span>
+              <div style={{ display: 'grid', gap: '14px' }}>
+                <div style={snapshotRowStyle}>
+                  <span>Candidate Analytics Dashboard</span>
+                  <strong>Live</strong>
+                </div>
+                <div style={snapshotRowStyle}>
+                  <span>Recruiter Analytics + Demo Mode</span>
+                  <strong>Live</strong>
+                </div>
+                <div style={snapshotRowStyle}>
+                  <span>Messaging + Resume Tools</span>
+                  <strong>Live</strong>
+                </div>
+                <div style={snapshotRowStyle}>
+                  <span>Cloud Deployment</span>
+                  <strong>Railway</strong>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+            gap: '18px',
+            marginBottom: '18px',
+          }}
+        >
+          <div style={featureCardStyle}>
+            <div style={eyebrowStyle}>Candidate Experience</div>
+            <h2 style={featureTitleStyle}>Application transparency</h2>
+            <p style={featureBodyStyle}>
+              Track total applications, companies applied to, locations targeted,
+              status changes, job sources, and recent activity from one analytics dashboard.
+            </p>
+          </div>
+
+          <div style={featureCardStyle}>
+            <div style={eyebrowStyle}>Recruiter Experience</div>
+            <h2 style={featureTitleStyle}>Hiring analytics</h2>
+            <p style={featureBodyStyle}>
+              Monitor total openings, applicant volume, most applied roles, location demand,
+              experience-level breakdowns, and certification-driven hiring signals.
+            </p>
+          </div>
+
+          <div style={featureCardStyle}>
+            <div style={eyebrowStyle}>Product Positioning</div>
+            <h2 style={featureTitleStyle}>Portfolio-ready system</h2>
+            <p style={featureBodyStyle}>
+              Designed to demonstrate product thinking, full-stack implementation,
+              cloud deployment, UI polish, analytics design, and platform storytelling.
+            </p>
+          </div>
+        </div>
+
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+            gap: '18px',
+            marginBottom: '18px',
+          }}
+        >
+          <div style={panelStyle}>
+            <div style={eyebrowStyle}>Why it matters</div>
+            <h2 style={sectionTitleStyle}>Candidates need clarity. Recruiters need signal.</h2>
+            <p style={sectionBodyStyle}>
+              Most hiring systems prioritize workflow management but leave candidates
+              in the dark and make recruiter performance hard to visualize. ClearPath
+              reframes the experience around visibility, progress, and operational insight.
+            </p>
+          </div>
+
+          <div style={panelStyle}>
+            <div style={eyebrowStyle}>Tech + Product Story</div>
+            <h2 style={sectionTitleStyle}>A real system, not just mock screens.</h2>
+            <p style={sectionBodyStyle}>
+              This project brings together authentication, database-backed workflows,
+              recruiter analytics, candidate tracking, structured UI systems, and a
+              live deployment that can be shown in interviews or demos.
+            </p>
+          </div>
+        </div>
+
+        <div style={ctaPanelStyle}>
+          <div>
+            <div style={eyebrowStyle}>Ready to explore</div>
+            <h2 style={ctaTitleStyle}>Choose your path into the platform.</h2>
+            <p style={ctaBodyStyle}>
+              Jump into candidate tools, review the recruiter demo, or create an account
+              to explore the full product experience.
+            </p>
+          </div>
+
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            <Link href="/auth/signup" style={heroPrimaryButton}>
+              Create Account
+            </Link>
+            <Link href="/auth/login" style={heroSecondaryButton}>
+              Log In
+            </Link>
+            <Link href="/recruiter/dashboard?demo=1" style={heroSecondaryButton}>
+              Recruiter Demo
+            </Link>
           </div>
         </div>
       </section>
     </main>
   );
 }
+
+const navLinkStyle: React.CSSProperties = {
+  background: 'transparent',
+  color: '#f8fafc',
+  textDecoration: 'none',
+  padding: '12px 16px',
+  fontWeight: 800,
+  fontSize: '12px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
+  border: '1px solid rgba(255,255,255,0.16)',
+};
+
+const primaryNavLinkStyle: React.CSSProperties = {
+  background: '#ffffff',
+  color: '#020406',
+  textDecoration: 'none',
+  padding: '12px 16px',
+  fontWeight: 800,
+  fontSize: '12px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
+  border: '1px solid #ffffff',
+};
+
+const heroPrimaryButton: React.CSSProperties = {
+  background: '#ffffff',
+  color: '#020406',
+  textDecoration: 'none',
+  padding: '15px 20px',
+  fontWeight: 800,
+  fontSize: '12px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
+  border: '1px solid #ffffff',
+};
+
+const heroSecondaryButton: React.CSSProperties = {
+  background: 'transparent',
+  color: '#f8fafc',
+  textDecoration: 'none',
+  padding: '15px 20px',
+  fontWeight: 800,
+  fontSize: '12px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
+  border: '1px solid rgba(255,255,255,0.16)',
+};
+
+const chipStyle: React.CSSProperties = {
+  padding: '10px 14px',
+  border: '1px solid rgba(255,255,255,0.12)',
+  color: '#cbd5e1',
+  fontSize: '12px',
+  fontWeight: 700,
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
+  background: 'rgba(255,255,255,0.02)',
+};
+
+const featureCardStyle: React.CSSProperties = {
+  border: '1px solid rgba(255,255,255,0.08)',
+  background: 'linear-gradient(180deg, rgba(9,12,18,0.98), rgba(5,8,13,0.98))',
+  padding: '24px',
+};
+
+const panelStyle: React.CSSProperties = {
+  border: '1px solid rgba(255,255,255,0.08)',
+  background: 'linear-gradient(180deg, rgba(9,12,18,0.98), rgba(5,8,13,0.98))',
+  padding: '24px',
+};
+
+const ctaPanelStyle: React.CSSProperties = {
+  border: '1px solid rgba(255,255,255,0.10)',
+  background: 'linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015))',
+  padding: '28px',
+  display: 'flex',
+  justifyContent: 'space-between',
+  gap: '24px',
+  alignItems: 'center',
+  flexWrap: 'wrap',
+};
+
+const eyebrowStyle: React.CSSProperties = {
+  color: '#94a3b8',
+  fontSize: '11px',
+  fontWeight: 700,
+  textTransform: 'uppercase',
+  letterSpacing: '0.12em',
+  marginBottom: '14px',
+};
+
+const featureTitleStyle: React.CSSProperties = {
+  fontSize: '32px',
+  lineHeight: 1.05,
+  letterSpacing: '-0.03em',
+  margin: '0 0 12px',
+  fontWeight: 800,
+};
+
+const featureBodyStyle: React.CSSProperties = {
+  color: '#cbd5e1',
+  fontSize: '17px',
+  lineHeight: 1.7,
+  margin: 0,
+};
+
+const sectionTitleStyle: React.CSSProperties = {
+  fontSize: '40px',
+  lineHeight: 1.05,
+  letterSpacing: '-0.04em',
+  margin: '0 0 12px',
+  fontWeight: 800,
+};
+
+const sectionBodyStyle: React.CSSProperties = {
+  color: '#cbd5e1',
+  fontSize: '18px',
+  lineHeight: 1.75,
+  margin: 0,
+};
+
+const ctaTitleStyle: React.CSSProperties = {
+  fontSize: '42px',
+  lineHeight: 1.02,
+  letterSpacing: '-0.04em',
+  margin: '0 0 10px',
+  fontWeight: 800,
+};
+
+const ctaBodyStyle: React.CSSProperties = {
+  color: '#cbd5e1',
+  fontSize: '18px',
+  lineHeight: 1.7,
+  margin: 0,
+  maxWidth: '760px',
+};
+
+const snapshotRowStyle: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  gap: '12px',
+  padding: '12px 0',
+  borderBottom: '1px solid rgba(255,255,255,0.06)',
+  color: '#e2e8f0',
+};
