@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import ProfileMenu from '@/components/ProfileMenu';
 import AnalyticsBarChart from '@/components/AnalyticsBarChart';
@@ -190,7 +190,7 @@ export default function RecruiterDashboardPage() {
         style={{
           maxWidth: '1440px',
           margin: '0 auto',
-          padding: 'clamp(24px, 4vw, 56px) clamp(18px, 3vw, 32px) 70px',
+          paddingTop: '80px', paddingTop: '80px', paddingTop: '80px', paddingTop: '80px', padding: 'clamp(24px, 4vw, 56px) clamp(18px, 3vw, 32px) 70px',
         }}
       >
         <div
@@ -302,7 +302,7 @@ export default function RecruiterDashboardPage() {
                 margin: 0,
               }}
             >
-              {fullName}{company ? ` • ${company}` : ''}
+              {fullName}{company ? ` â€¢ ${company}` : ''}
             </p>
           </div>
 
@@ -615,5 +615,6 @@ const actionLink: React.CSSProperties = {
   letterSpacing: '0.08em',
   border: '1px solid rgba(255,255,255,0.16)',
 };
+
 
 

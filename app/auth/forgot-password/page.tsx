@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useState } from 'react';
 import Link from 'next/link';
@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
         </h1>
 
         <p style={{ color: '#cbd5e1', fontSize: '18px', lineHeight: 1.5, margin: '0 0 24px' }}>
-          Enter your email and we’ll send you a secure reset link.
+          Enter your email and weâ€™ll send you a secure reset link.
         </p>
 
         <div style={{ display: 'grid', gap: '14px' }}>
@@ -79,3 +79,4 @@ export default function ForgotPasswordPage() {
     </main>
   );
 }
+

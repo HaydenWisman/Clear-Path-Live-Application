@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import Link from 'next/link';
 
@@ -16,7 +16,7 @@ export default function HomePage() {
         style={{
           maxWidth: '1440px',
           margin: '0 auto',
-          padding: 'clamp(22px, 4vw, 40px) clamp(18px, 3vw, 32px) 80px',
+          paddingTop: '80px', paddingTop: '80px', paddingTop: '80px', paddingTop: '80px', padding: 'clamp(22px, 4vw, 40px) clamp(18px, 3vw, 32px) 80px',
         }}
       >
         <header
@@ -85,7 +85,7 @@ export default function HomePage() {
                 letterSpacing: '0.14em',
               }}
             >
-              Portfolio Build • Live Product Demo
+              Portfolio Build â€¢ Live Product Demo
             </div>
 
             <h1
@@ -455,5 +455,6 @@ const snapshotRowStyle: React.CSSProperties = {
   borderBottom: '1px solid rgba(255,255,255,0.06)',
   color: '#e2e8f0',
 };
+
 
 

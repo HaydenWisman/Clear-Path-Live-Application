@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
@@ -198,16 +198,16 @@ export default function RecruiterJobsPage() {
               {jobs.map((job) => (
                 <div key={job.id} style={{ background: '#0b1324', border: '1px solid #223150', borderRadius: '14px', padding: '16px' }}>
                   <h3 style={{ marginTop: 0 }}>{job.title}</h3>
-                  <p style={{ margin: '4px 0', color: '#b7c2d8' }}>{job.company}{job.location ? ' · ' + job.location : ''}</p>
+                  <p style={{ margin: '4px 0', color: '#b7c2d8' }}>{job.company}{job.location ? ' Â· ' + job.location : ''}</p>
                   <p style={{ margin: '8px 0', color: '#9fb0ce' }}>{job.description}</p>
                   <p style={{ margin: '8px 0', color: '#b7c2d8' }}>
                     Skills: {job.skills_required && job.skills_required.length > 0 ? job.skills_required.join(', ') : '-'}
                   </p>
                   <p style={{ margin: '8px 0', color: '#b7c2d8' }}>
-                    Type: {job.employment_type || '-'} · Level: {job.experience_level || '-'}
+                    Type: {job.employment_type || '-'} Â· Level: {job.experience_level || '-'}
                   </p>
                   <p style={{ margin: '8px 0', fontSize: '12px', color: '#9fb0ce' }}>
-                    Status: {job.status} · Created: {new Date(job.created_at).toLocaleDateString()}
+                    Status: {job.status} Â· Created: {new Date(job.created_at).toLocaleDateString()}
                   </p>
 
                   <Link
@@ -234,3 +234,4 @@ export default function RecruiterJobsPage() {
     </main>
   );
 }
+

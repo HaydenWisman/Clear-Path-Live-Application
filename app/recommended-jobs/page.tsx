@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -161,7 +161,7 @@ export default function RecommendedJobsPage() {
         style={{
           maxWidth: '1440px',
           margin: '0 auto',
-          padding: 'clamp(24px, 4vw, 52px) clamp(18px, 3vw, 32px) 70px',
+          paddingTop: '80px', paddingTop: '80px', paddingTop: '80px', paddingTop: '80px', padding: 'clamp(24px, 4vw, 52px) clamp(18px, 3vw, 32px) 70px',
         }}
       >
         <div style={{ marginBottom: '22px' }}>
@@ -447,8 +447,8 @@ export default function RecommendedJobsPage() {
                     }}
                   >
                     {(job.location || 'Location unavailable')}
-                    {job.employment_type ? ` • ${job.employment_type}` : ''}
-                    {job.experience_level ? ` • ${job.experience_level}` : ''}
+                    {job.employment_type ? ` â€¢ ${job.employment_type}` : ''}
+                    {job.experience_level ? ` â€¢ ${job.experience_level}` : ''}
                   </div>
 
                   <div
@@ -607,5 +607,6 @@ export default function RecommendedJobsPage() {
     </main>
   );
 }
+
 
 

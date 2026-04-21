@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { Suspense, useEffect, useState } from 'react';
 import { createClient } from '@/lib/supabase/client';
@@ -311,7 +311,7 @@ function MessagesPageContent() {
   };
 
   return (
-    <main style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #020406 0%, #05080d 30%, #0a1017 100%)', color: '#f8fafc', fontFamily: 'Arial, sans-serif', padding: 'clamp(16px, 3vw, 32px)' }}>
+    <main style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #020406 0%, #05080d 30%, #0a1017 100%)', color: '#f8fafc', fontFamily: 'Arial, sans-serif', paddingTop: '80px', paddingTop: '80px', paddingTop: '80px', paddingTop: '80px', padding: 'clamp(16px, 3vw, 32px)' }}>
       <div style={{ maxWidth: '1320px', margin: '0 auto' }}>
         <div style={{ marginBottom: '24px' }}>
           <div style={{ color: '#94a3b8', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: '14px' }}>
@@ -360,7 +360,7 @@ function MessagesPageContent() {
                       <div>
                         <div style={{ fontWeight: 'bold' }}>{profile.full_name || 'Unnamed User'}</div>
                         <div style={{ fontSize: '12px', color: '#94a3b8' }}>
-                          {profile.role || 'user'}{profile.company ? ' · ' + profile.company : ''}
+                          {profile.role || 'user'}{profile.company ? ' Â· ' + profile.company : ''}
                         </div>
                       </div>
                     </button>
@@ -413,7 +413,7 @@ function MessagesPageContent() {
                           )}
                         </div>
                         <div style={{ fontSize: '12px', color: '#94a3b8' }}>
-                          {other?.role || 'user'}{other?.company ? ' · ' + other.company : ''}
+                          {other?.role || 'user'}{other?.company ? ' Â· ' + other.company : ''}
                         </div>
                         <div style={{ fontSize: '12px', color: '#cbd5e1', marginTop: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 'min(200px, 42vw)' }}>
                           {conversation.lastMessage}
@@ -483,10 +483,11 @@ function MessagesPageContent() {
 
 export default function MessagesPage() {
   return (
-    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#020406', color: '#f8fafc', padding: 'clamp(16px, 3vw, 32px)', fontFamily: 'Arial, sans-serif' }}>Loading messages...</div>}>
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#020406', color: '#f8fafc', paddingTop: '80px', paddingTop: '80px', paddingTop: '80px', paddingTop: '80px', padding: 'clamp(16px, 3vw, 32px)', fontFamily: 'Arial, sans-serif' }}>Loading messages...</div>}>
       <MessagesPageContent />
     </Suspense>
   );
 }
+
 
 
