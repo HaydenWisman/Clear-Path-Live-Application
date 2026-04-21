@@ -227,7 +227,7 @@ export default function ResumeBuilderPage() {
               border: '1px solid rgba(255,255,255,0.1)',
               background: '#05080d',
               padding: '22px',
-              boxShadow: '0 24px 80px rgba(0,0,0,0.45)',
+              boxShadow: '0 20px 60px rgba(0,0,0,0.32)',
             }}
           >
             <div
@@ -498,4 +498,5 @@ export default function ResumeBuilderPage() {
     </main>
   );
 }
+
 

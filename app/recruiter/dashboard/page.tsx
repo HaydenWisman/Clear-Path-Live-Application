@@ -2,6 +2,7 @@
 
 import ProfileMenu from '@/components/ProfileMenu';
 import AnalyticsBarChart from '@/components/AnalyticsBarChart';
+import { EmptyState } from '@/components/UiPolish';
 import {
   demoRecruiterApplications,
   demoRecruiterJobs,
@@ -614,4 +615,5 @@ const actionLink: React.CSSProperties = {
   letterSpacing: '0.08em',
   border: '1px solid rgba(255,255,255,0.16)',
 };
+
 

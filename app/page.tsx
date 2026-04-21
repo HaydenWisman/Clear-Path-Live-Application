@@ -153,7 +153,7 @@ export default function HomePage() {
               border: '1px solid rgba(255,255,255,0.10)',
               background: '#05080d',
               padding: '22px',
-              boxShadow: '0 24px 80px rgba(0,0,0,0.45)',
+              boxShadow: '0 24px 80px rgba(0,0,0,0.38)',
             }}
           >
             <div
@@ -316,6 +316,7 @@ const navLinkStyle: React.CSSProperties = {
   textTransform: 'uppercase',
   letterSpacing: '0.08em',
   border: '1px solid rgba(255,255,255,0.16)',
+  transition: 'transform 160ms ease, opacity 160ms ease, border-color 160ms ease',
 };
 
 const primaryNavLinkStyle: React.CSSProperties = {
@@ -328,6 +329,7 @@ const primaryNavLinkStyle: React.CSSProperties = {
   textTransform: 'uppercase',
   letterSpacing: '0.08em',
   border: '1px solid #ffffff',
+  transition: 'transform 160ms ease, opacity 160ms ease, background 160ms ease',
 };
 
 const heroPrimaryButton: React.CSSProperties = {
@@ -340,6 +342,7 @@ const heroPrimaryButton: React.CSSProperties = {
   textTransform: 'uppercase',
   letterSpacing: '0.08em',
   border: '1px solid #ffffff',
+  transition: 'transform 160ms ease, opacity 160ms ease, background 160ms ease',
 };
 
 const heroSecondaryButton: React.CSSProperties = {
@@ -352,6 +355,7 @@ const heroSecondaryButton: React.CSSProperties = {
   textTransform: 'uppercase',
   letterSpacing: '0.08em',
   border: '1px solid rgba(255,255,255,0.16)',
+  transition: 'transform 160ms ease, opacity 160ms ease, border-color 160ms ease',
 };
 
 const chipStyle: React.CSSProperties = {
@@ -451,4 +455,5 @@ const snapshotRowStyle: React.CSSProperties = {
   borderBottom: '1px solid rgba(255,255,255,0.06)',
   color: '#e2e8f0',
 };
+
 
