@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import ProfileMenu from '@/components/ProfileMenu';
 import AnalyticsBarChart from '@/components/AnalyticsBarChart';
@@ -36,6 +36,17 @@ function groupCounts(items: string[]) {
     .sort((a, b) => b.count - a.count);
 }
 
+const demoApplications: ApplicationRow[] = [
+  { id: '1', status: 'submitted', applied_at: '2026-04-01T12:00:00.000Z', source: 'LinkedIn', jobs: { company: 'Amazon', title: 'Security Program Manager', location: 'Seattle, WA' } },
+  { id: '2', status: 'under_review', applied_at: '2026-04-02T12:00:00.000Z', source: 'Indeed', jobs: { company: 'Microsoft', title: 'Security Operations Analyst', location: 'Redmond, WA' } },
+  { id: '3', status: 'interview', applied_at: '2026-04-03T12:00:00.000Z', source: 'Handshake', jobs: { company: 'Boeing', title: 'Corporate Security Specialist', location: 'Everett, WA' } },
+  { id: '4', status: 'submitted', applied_at: '2026-04-04T12:00:00.000Z', source: 'Direct', jobs: { company: 'SpaceX', title: 'Security Systems Analyst', location: 'Los Angeles, CA' } },
+  { id: '5', status: 'offer', applied_at: '2026-04-05T12:00:00.000Z', source: 'LinkedIn', jobs: { company: 'Stripe', title: 'Program Manager', location: 'Remote' } },
+  { id: '6', status: 'submitted', applied_at: '2026-04-06T12:00:00.000Z', source: 'Indeed', jobs: { company: 'OpenAI', title: 'AI Research Operations', location: 'San Francisco, CA' } },
+  { id: '7', status: 'under_review', applied_at: '2026-04-07T12:00:00.000Z', source: 'LinkedIn', jobs: { company: 'Meta', title: 'Security Operations Manager', location: 'New York, NY' } },
+  { id: '8', status: 'submitted', applied_at: '2026-04-08T12:00:00.000Z', source: 'Direct', jobs: { company: 'Notion', title: 'Product Operations Lead', location: 'Austin, TX' } },
+];
+
 export default function DashboardPage() {
   const supabase = createClient();
 
@@ -43,20 +54,10 @@ export default function DashboardPage() {
   const [applications, setApplications] = useState<ApplicationRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+  const [demoMode, setDemoMode] = useState(false);
 
   const [localTimeZone, setLocalTimeZone] = useState('UTC');
   const [localHour, setLocalHour] = useState<number>(9);
-
-  const [showDirectForm, setShowDirectForm] = useState(false);
-  const [directUrl, setDirectUrl] = useState('');
-  const [directTitle, setDirectTitle] = useState('');
-  const [directCompany, setDirectCompany] = useState('');
-  const [directAppliedDate, setDirectAppliedDate] = useState(
-    new Date().toISOString().split('T')[0]
-  );
-  const [savingDirect, setSavingDirect] = useState(false);
-  const [directMessage, setDirectMessage] = useState('');
-  const [directError, setDirectError] = useState('');
 
   useEffect(() => {
     const updateLocalTime = () => {
@@ -74,6 +75,20 @@ export default function DashboardPage() {
   const greeting = useMemo(() => getGreetingForHour(localHour), [localHour]);
 
   const loadDashboardData = async () => {
+    const demoEnabled =
+      typeof window !== 'undefined' &&
+      new URLSearchParams(window.location.search).get('demo') === '1';
+
+    setDemoMode(demoEnabled);
+
+    if (demoEnabled) {
+      setFullName('Guest Candidate');
+      setApplications(demoApplications);
+      setUnreadMessagesCount(3);
+      setLoading(false);
+      return;
+    }
+
     const {
       data: { user },
     } = await supabase.auth.getUser();
@@ -132,102 +147,6 @@ export default function DashboardPage() {
     loadDashboardData();
   }, []);
 
-  const guessCompanyFromUrl = (url: string) => {
-    try {
-      const parsed = new URL(url);
-      const hostname = parsed.hostname.replace('www.', '');
-      const firstPart = hostname.split('.')[0];
-      if (!firstPart) return '';
-      return firstPart
-        .split('-')
-        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-        .join(' ');
-    } catch {
-      return '';
-    }
-  };
-
-  const handleDirectUrlChange = (value: string) => {
-    setDirectUrl(value);
-
-    if (!directCompany.trim()) {
-      const guessed = guessCompanyFromUrl(value);
-      if (guessed) {
-        setDirectCompany(guessed);
-      }
-    }
-  };
-
-  const saveDirectApplication = async () => {
-    setSavingDirect(true);
-    setDirectMessage('');
-    setDirectError('');
-
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
-    if (!user) {
-      setDirectError('You must be logged in.');
-      setSavingDirect(false);
-      return;
-    }
-
-    if (!directUrl.trim() || !directTitle.trim() || !directCompany.trim()) {
-      setDirectError('Please fill in the job URL, title, and company.');
-      setSavingDirect(false);
-      return;
-    }
-
-    const appliedAtIso = new Date(`${directAppliedDate}T12:00:00`).toISOString();
-
-    const { data: jobData, error: jobError } = await supabase
-      .from('jobs')
-      .insert({
-        recruiter_id: user.id,
-        title: directTitle,
-        company: directCompany,
-        location: 'External / Direct',
-        description: 'Imported by candidate from external direct application link.',
-        status: 'open',
-      })
-      .select()
-      .single();
-
-    if (jobError) {
-      setDirectError(jobError.message);
-      setSavingDirect(false);
-      return;
-    }
-
-    const { error: applicationError } = await supabase
-      .from('applications')
-      .insert({
-        candidate_id: user.id,
-        job_id: jobData.id,
-        status: 'submitted',
-        source: 'Direct',
-        applied_at: appliedAtIso,
-        job_url: directUrl,
-      });
-
-    if (applicationError) {
-      setDirectError(applicationError.message);
-      setSavingDirect(false);
-      return;
-    }
-
-    setDirectMessage('Direct application saved successfully.');
-    setDirectUrl('');
-    setDirectTitle('');
-    setDirectCompany('');
-    setDirectAppliedDate(new Date().toISOString().split('T')[0]);
-    setShowDirectForm(false);
-    setSavingDirect(false);
-
-    await loadDashboardData();
-  };
-
   const totalApplications = applications.length;
   const distinctCompanies = new Set(
     applications.map((a) => a.jobs?.company || 'Unknown')
@@ -245,18 +164,6 @@ export default function DashboardPage() {
   const sourceCounts = groupCounts(applications.map((a) => a.source || 'Unknown'));
   const recentApplications = applications.slice(0, 8);
 
-  const chipStyle: React.CSSProperties = {
-    padding: '10px 14px',
-    border: '1px solid rgba(255,255,255,0.12)',
-    color: '#cbd5e1',
-    fontSize: '12px',
-    fontWeight: 700,
-    textTransform: 'uppercase',
-    letterSpacing: '0.08em',
-    background: 'rgba(255,255,255,0.02)',
-    textDecoration: 'none',
-  };
-
   return (
     <main
       style={{
@@ -270,7 +177,7 @@ export default function DashboardPage() {
         style={{
           maxWidth: '1440px',
           margin: '0 auto',
-          paddingTop: '80px', paddingTop: '80px', paddingTop: '80px', paddingTop: '80px', padding: 'clamp(24px, 4vw, 56px) clamp(18px, 3vw, 32px) 70px',
+          padding: 'clamp(24px, 4vw, 56px) clamp(18px, 3vw, 32px) 70px',
         }}
       >
         <div
@@ -282,6 +189,44 @@ export default function DashboardPage() {
         >
           <ProfileMenu />
         </div>
+
+        {demoMode && (
+          <div
+            style={{
+              marginBottom: '18px',
+              padding: '14px 16px',
+              border: '1px solid rgba(255,255,255,0.10)',
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))',
+              display: 'flex',
+              justifyContent: 'space-between',
+              gap: '16px',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '13px',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  marginBottom: '4px',
+                }}
+              >
+                Candidate Demo Mode Active
+              </div>
+              <div style={{ color: '#cbd5e1', fontSize: '14px' }}>
+                This is a guest candidate view using curated demo analytics for class exploration.
+              </div>
+            </div>
+
+            <Link href="/dashboard" style={actionLink}>
+              Exit Demo Mode
+            </Link>
+          </div>
+        )}
 
         <div
           style={{
@@ -347,93 +292,6 @@ export default function DashboardPage() {
               and status changes from one command dashboard.
             </p>
 
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '28px' }}>
-              <a href="https://www.linkedin.com/login" target="_blank" rel="noreferrer" style={chipStyle}>
-                LinkedIn
-              </a>
-              <a href="https://secure.indeed.com/account/login" target="_blank" rel="noreferrer" style={chipStyle}>
-                Indeed
-              </a>
-              <a href="https://app.joinhandshake.com/login" target="_blank" rel="noreferrer" style={chipStyle}>
-                Handshake
-              </a>
-              <button
-                onClick={() => setShowDirectForm(!showDirectForm)}
-                style={{ ...chipStyle, cursor: 'pointer' }}
-              >
-                Add Direct URL
-              </button>
-            </div>
-
-            {showDirectForm && (
-              <div
-                style={{
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))',
-                  padding: '18px',
-                  marginBottom: '26px',
-                }}
-              >
-                <div
-                  style={{
-                    color: '#94a3b8',
-                    fontSize: '11px',
-                    fontWeight: 700,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.12em',
-                    marginBottom: '14px',
-                  }}
-                >
-                  Add Direct Application
-                </div>
-
-                <div style={{ display: 'grid', gap: '12px' }}>
-                  <input
-                    value={directUrl}
-                    onChange={(e) => handleDirectUrlChange(e.target.value)}
-                    placeholder="Job posting URL"
-                    style={inputStyle}
-                  />
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                    <input
-                      value={directTitle}
-                      onChange={(e) => setDirectTitle(e.target.value)}
-                      placeholder="Job title"
-                      style={inputStyle}
-                    />
-
-                    <input
-                      value={directCompany}
-                      onChange={(e) => setDirectCompany(e.target.value)}
-                      placeholder="Company name"
-                      style={inputStyle}
-                    />
-                  </div>
-
-                  <input
-                    type="date"
-                    value={directAppliedDate}
-                    onChange={(e) => setDirectAppliedDate(e.target.value)}
-                    style={{ ...inputStyle, width: '240px' }}
-                  />
-
-                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                    <button onClick={saveDirectApplication} disabled={savingDirect} style={primaryButton}>
-                      {savingDirect ? 'Saving...' : 'Save Direct Application'}
-                    </button>
-
-                    <button onClick={() => setShowDirectForm(false)} style={secondaryButton}>
-                      Cancel
-                    </button>
-                  </div>
-
-                  {directMessage && <div style={{ color: '#86efac', fontSize: '14px' }}>{directMessage}</div>}
-                  {directError && <div style={{ color: '#fca5a5', fontSize: '14px' }}>{directError}</div>}
-                </div>
-              </div>
-            )}
-
             <div
               style={{
                 display: 'grid',
@@ -496,7 +354,7 @@ export default function DashboardPage() {
 
               <div style={heroFooterStyle}>
                 <span>Search Active</span>
-                <span>Visibility Enabled</span>
+                <span>{demoMode ? 'Demo Ready' : 'Visibility Enabled'}</span>
               </div>
             </div>
           </div>
@@ -528,6 +386,7 @@ export default function DashboardPage() {
                   alignItems: 'center',
                   gap: '16px',
                   marginBottom: '16px',
+                  flexWrap: 'wrap',
                 }}
               >
                 <div style={panelHeading}>Recent Applications</div>
@@ -542,7 +401,7 @@ export default function DashboardPage() {
               </div>
 
               {recentApplications.length === 0 ? (
-                <div style={emptyStyle}>No applications yet.</div>
+                <div style={{ color: '#94a3b8', padding: '12px 0' }}>No applications yet.</div>
               ) : (
                 <div style={{ overflowX: 'auto' }}>
                   <table style={tableStyle}>
@@ -579,15 +438,6 @@ export default function DashboardPage() {
     </main>
   );
 }
-
-const inputStyle: React.CSSProperties = {
-  width: '100%',
-  padding: '14px',
-  background: '#0b1118',
-  color: '#fff',
-  border: '1px solid rgba(255,255,255,0.12)',
-  boxSizing: 'border-box',
-};
 
 const metricCardStyle: React.CSSProperties = {
   border: '1px solid rgba(255,255,255,0.08)',
@@ -655,11 +505,6 @@ const heroFooterStyle: React.CSSProperties = {
   letterSpacing: '0.08em',
 };
 
-const emptyStyle: React.CSSProperties = {
-  color: '#94a3b8',
-  padding: '12px 0',
-};
-
 const cellStyle: React.CSSProperties = {
   padding: '12px 10px',
   borderBottom: '1px solid rgba(255,255,255,0.06)',
@@ -681,31 +526,6 @@ const tableHeadingStyle: React.CSSProperties = {
   fontSize: '11px',
   textTransform: 'uppercase',
   letterSpacing: '0.12em',
-};
-
-const primaryButton: React.CSSProperties = {
-  background: '#ffffff',
-  color: '#020406',
-  textDecoration: 'none',
-  padding: '14px 20px',
-  fontWeight: 800,
-  fontSize: '12px',
-  textTransform: 'uppercase',
-  letterSpacing: '0.08em',
-  border: 'none',
-  cursor: 'pointer',
-};
-
-const secondaryButton: React.CSSProperties = {
-  background: 'transparent',
-  color: '#f8fafc',
-  padding: '14px 20px',
-  fontWeight: 800,
-  fontSize: '12px',
-  textTransform: 'uppercase',
-  letterSpacing: '0.08em',
-  border: '1px solid rgba(255,255,255,0.16)',
-  cursor: 'pointer',
 };
 
 const actionLinkPrimary: React.CSSProperties = {
@@ -731,5 +551,3 @@ const actionLink: React.CSSProperties = {
   letterSpacing: '0.08em',
   border: '1px solid rgba(255,255,255,0.16)',
 };
-
-
