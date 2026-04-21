@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import ProfileMenu from '@/components/ProfileMenu';
+import AnalyticsBarChart from '@/components/AnalyticsBarChart';
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
@@ -146,7 +147,7 @@ export default function RecruiterDashboardPage() {
     applications.map((a) => jobLookup.get(a.job_id)?.location || 'Unknown')
   ).slice(0, 6);
 
-  const applicationsByLevel = groupCounts(
+  const jobsByLevel = groupCounts(
     jobs.map((job) => job.experience_level || 'Unknown')
   );
 
@@ -243,33 +244,9 @@ export default function RecruiterDashboardPage() {
             </p>
           </div>
 
-          <div
-            style={{
-              border: '1px solid rgba(255,255,255,0.1)',
-              background: '#05080d',
-              padding: '22px',
-              boxShadow: '0 24px 80px rgba(0,0,0,0.45)',
-            }}
-          >
-            <div
-              style={{
-                border: '1px solid rgba(255,255,255,0.08)',
-                padding: '28px',
-                background: 'linear-gradient(180deg, #070b12 0%, #03060b 100%)',
-              }}
-            >
-              <div
-                style={{
-                  color: '#94a3b8',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.12em',
-                  marginBottom: '18px',
-                }}
-              >
-                Live Recruiter Snapshot
-              </div>
+          <div style={heroPanelStyle}>
+            <div style={heroInnerStyle}>
+              <div style={panelHeading}>Live Recruiter Snapshot</div>
 
               <div
                 style={{
@@ -296,14 +273,7 @@ export default function RecruiterDashboardPage() {
                 message activity and open roles.
               </div>
 
-              <div
-                style={{
-                  height: '10px',
-                  background: 'rgba(255,255,255,0.08)',
-                  marginBottom: '10px',
-                  overflow: 'hidden',
-                }}
-              >
+              <div style={progressTrack}>
                 <div
                   style={{
                     width: `${Math.min(100, Math.max(10, applicantsCount * 6))}%`,
@@ -313,17 +283,7 @@ export default function RecruiterDashboardPage() {
                 />
               </div>
 
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  color: '#94a3b8',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                }}
-              >
+              <div style={heroFooterStyle}>
                 <span>Pipeline Active</span>
                 <span>Visibility Enabled</span>
               </div>
@@ -359,131 +319,59 @@ export default function RecruiterDashboardPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-                gap: '14px',
-                marginBottom: '18px',
-              }}
-            >
-              {[
-                { label: 'Certification-Required Jobs', value: certificationRequiredCount },
-                { label: 'Entry / Mid / Senior / Exec Tracked', value: applicationsByLevel.length },
-                { label: 'Most Applied Locations', value: applicationsByLocation.length },
-                { label: 'Most Applied Jobs', value: applicationsByJob.length },
-              ].map((item) => (
-                <div key={item.label} style={metricCardStyle}>
-                  <div style={metricLabelStyle}>{item.label}</div>
-                  <div style={metricValueStyle}>{item.value}</div>
-                </div>
-              ))}
-            </div>
-
-            <div
-              style={{
-                display: 'grid',
                 gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
                 gap: '18px',
                 marginBottom: '18px',
               }}
             >
+              <AnalyticsBarChart title="Applications by Job" items={applicationsByJob} emptyText="No application data yet." />
+              <AnalyticsBarChart title="Applications by Location" items={applicationsByLocation} emptyText="No location data yet." />
+              <AnalyticsBarChart title="Jobs by Experience Level" items={jobsByLevel} emptyText="No job level data yet." />
               <div style={panelStyle}>
-                <div style={panelHeading}>Applications by Job</div>
-                <div style={{ display: 'grid', gap: '10px' }}>
-                  {applicationsByJob.length === 0 ? (
-                    <div style={emptyStyle}>No application data yet.</div>
-                  ) : (
-                    applicationsByJob.map((item) => (
-                      <div key={item.label} style={rowStyle}>
-                        <span>{item.label}</span>
-                        <strong>{item.count}</strong>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
+                <div style={panelHeading}>Recruiter Summary</div>
 
-              <div style={panelStyle}>
-                <div style={panelHeading}>Applications by Location</div>
-                <div style={{ display: 'grid', gap: '10px' }}>
-                  {applicationsByLocation.length === 0 ? (
-                    <div style={emptyStyle}>No location data yet.</div>
-                  ) : (
-                    applicationsByLocation.map((item) => (
-                      <div key={item.label} style={rowStyle}>
-                        <span>{item.label}</span>
-                        <strong>{item.count}</strong>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
+                <div style={{ display: 'grid', gap: '12px' }}>
+                  <div style={summaryRowStyle}>
+                    <span>Certification-Required Jobs</span>
+                    <strong>{certificationRequiredCount}</strong>
+                  </div>
 
-              <div style={panelStyle}>
-                <div style={panelHeading}>Jobs by Experience Level</div>
-                <div style={{ display: 'grid', gap: '10px' }}>
-                  {applicationsByLevel.length === 0 ? (
-                    <div style={emptyStyle}>No job level data yet.</div>
-                  ) : (
-                    applicationsByLevel.map((item) => (
-                      <div key={item.label} style={rowStyle}>
-                        <span>{item.label}</span>
-                        <strong>{item.count}</strong>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
+                  <div style={summaryRowStyle}>
+                    <span>Tracked Levels</span>
+                    <strong>{jobsByLevel.length}</strong>
+                  </div>
 
-              <div style={panelStyle}>
-                <div style={panelHeading}>Recruiter Actions</div>
-                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                  <Link href="/recruiter/jobs" style={actionLinkPrimary}>Manage Jobs</Link>
-                  <Link href="/messages" style={actionLink}>Messages</Link>
-                  <Link href="/profile" style={actionLink}>Profile</Link>
+                  <div style={summaryRowStyle}>
+                    <span>Most Applied Jobs</span>
+                    <strong>{applicationsByJob.length}</strong>
+                  </div>
+
+                  <div style={summaryRowStyle}>
+                    <span>Most Applied Locations</span>
+                    <strong>{applicationsByLocation.length}</strong>
+                  </div>
+
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '10px' }}>
+                    <Link href="/recruiter/jobs" style={actionLinkPrimary}>Manage Jobs</Link>
+                    <Link href="/messages" style={actionLink}>Messages</Link>
+                    <Link href="/profile" style={actionLink}>Profile</Link>
+                  </div>
                 </div>
               </div>
             </div>
 
             <div style={panelStyle}>
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  gap: '16px',
-                  marginBottom: '16px',
-                }}
-              >
-                <div style={panelHeading}>Recent Job Postings</div>
-              </div>
+              <div style={panelHeading}>Recent Job Postings</div>
 
               {recentJobs.length === 0 ? (
                 <div style={emptyStyle}>No jobs posted yet.</div>
               ) : (
                 <div style={{ overflowX: 'auto' }}>
-                  <table
-                    style={{
-                      width: '100%',
-                      borderCollapse: 'collapse',
-                      color: '#f8fafc',
-                    }}
-                  >
+                  <table style={tableStyle}>
                     <thead>
                       <tr>
                         {['Job Title', 'Company', 'Location', 'Level', 'Status', 'Certifications'].map((heading) => (
-                          <th
-                            key={heading}
-                            style={{
-                              textAlign: 'left',
-                              padding: '12px 10px',
-                              borderBottom: '1px solid rgba(255,255,255,0.08)',
-                              color: '#94a3b8',
-                              fontSize: '11px',
-                              textTransform: 'uppercase',
-                              letterSpacing: '0.12em',
-                            }}
-                          >
-                            {heading}
-                          </th>
+                          <th key={heading} style={tableHeadingStyle}>{heading}</th>
                         ))}
                       </tr>
                     </thead>
@@ -541,6 +429,19 @@ const panelStyle: React.CSSProperties = {
   padding: '22px',
 };
 
+const heroPanelStyle: React.CSSProperties = {
+  border: '1px solid rgba(255,255,255,0.1)',
+  background: '#05080d',
+  padding: '22px',
+  boxShadow: '0 24px 80px rgba(0,0,0,0.45)',
+};
+
+const heroInnerStyle: React.CSSProperties = {
+  border: '1px solid rgba(255,255,255,0.08)',
+  padding: '28px',
+  background: 'linear-gradient(180deg, #070b12 0%, #03060b 100%)',
+};
+
 const panelHeading: React.CSSProperties = {
   color: '#94a3b8',
   fontSize: '11px',
@@ -550,7 +451,24 @@ const panelHeading: React.CSSProperties = {
   marginBottom: '14px',
 };
 
-const rowStyle: React.CSSProperties = {
+const progressTrack: React.CSSProperties = {
+  height: '10px',
+  background: 'rgba(255,255,255,0.08)',
+  marginBottom: '10px',
+  overflow: 'hidden',
+};
+
+const heroFooterStyle: React.CSSProperties = {
+  display: 'flex',
+  justifyContent: 'space-between',
+  color: '#94a3b8',
+  fontSize: '12px',
+  fontWeight: 700,
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
+};
+
+const summaryRowStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'space-between',
   gap: '12px',
@@ -569,6 +487,22 @@ const cellStyle: React.CSSProperties = {
   borderBottom: '1px solid rgba(255,255,255,0.06)',
   color: '#e2e8f0',
   fontSize: '14px',
+};
+
+const tableStyle: React.CSSProperties = {
+  width: '100%',
+  borderCollapse: 'collapse',
+  color: '#f8fafc',
+};
+
+const tableHeadingStyle: React.CSSProperties = {
+  textAlign: 'left',
+  padding: '12px 10px',
+  borderBottom: '1px solid rgba(255,255,255,0.08)',
+  color: '#94a3b8',
+  fontSize: '11px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.12em',
 };
 
 const actionLinkPrimary: React.CSSProperties = {

@@ -1,6 +1,7 @@
 ﻿'use client';
 
 import ProfileMenu from '@/components/ProfileMenu';
+import AnalyticsBarChart from '@/components/AnalyticsBarChart';
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
@@ -66,7 +67,7 @@ export default function DashboardPage() {
     };
 
     updateLocalTime();
-    const interval = setInterval(updateLocalTime, 60_000);
+    const interval = setInterval(updateLocalTime, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -256,18 +257,6 @@ export default function DashboardPage() {
     textDecoration: 'none',
   };
 
-  const metricCardStyle: React.CSSProperties = {
-    border: '1px solid rgba(255,255,255,0.08)',
-    background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))',
-    padding: '18px',
-  };
-
-  const panelStyle: React.CSSProperties = {
-    border: '1px solid rgba(255,255,255,0.08)',
-    background: 'linear-gradient(180deg, rgba(9,12,18,0.98), rgba(5,8,13,0.98))',
-    padding: '22px',
-  };
-
   return (
     <main
       style={{
@@ -403,14 +392,7 @@ export default function DashboardPage() {
                     value={directUrl}
                     onChange={(e) => handleDirectUrlChange(e.target.value)}
                     placeholder="Job posting URL"
-                    style={{
-                      width: '100%',
-                      padding: '14px',
-                      background: '#0b1118',
-                      color: '#fff',
-                      border: '1px solid rgba(255,255,255,0.12)',
-                      boxSizing: 'border-box',
-                    }}
+                    style={inputStyle}
                   />
 
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
@@ -418,28 +400,14 @@ export default function DashboardPage() {
                       value={directTitle}
                       onChange={(e) => setDirectTitle(e.target.value)}
                       placeholder="Job title"
-                      style={{
-                        width: '100%',
-                        padding: '14px',
-                        background: '#0b1118',
-                        color: '#fff',
-                        border: '1px solid rgba(255,255,255,0.12)',
-                        boxSizing: 'border-box',
-                      }}
+                      style={inputStyle}
                     />
 
                     <input
                       value={directCompany}
                       onChange={(e) => setDirectCompany(e.target.value)}
                       placeholder="Company name"
-                      style={{
-                        width: '100%',
-                        padding: '14px',
-                        background: '#0b1118',
-                        color: '#fff',
-                        border: '1px solid rgba(255,255,255,0.12)',
-                        boxSizing: 'border-box',
-                      }}
+                      style={inputStyle}
                     />
                   </div>
 
@@ -447,62 +415,21 @@ export default function DashboardPage() {
                     type="date"
                     value={directAppliedDate}
                     onChange={(e) => setDirectAppliedDate(e.target.value)}
-                    style={{
-                      width: '240px',
-                      padding: '14px',
-                      background: '#0b1118',
-                      color: '#fff',
-                      border: '1px solid rgba(255,255,255,0.12)',
-                      boxSizing: 'border-box',
-                    }}
+                    style={{ ...inputStyle, width: '240px' }}
                   />
 
                   <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
-                    <button
-                      onClick={saveDirectApplication}
-                      disabled={savingDirect}
-                      style={{
-                        background: '#ffffff',
-                        color: '#020406',
-                        textDecoration: 'none',
-                        padding: '14px 20px',
-                        fontWeight: 800,
-                        fontSize: '12px',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.08em',
-                        border: 'none',
-                        cursor: savingDirect ? 'not-allowed' : 'pointer',
-                        opacity: savingDirect ? 0.6 : 1,
-                      }}
-                    >
+                    <button onClick={saveDirectApplication} disabled={savingDirect} style={primaryButton}>
                       {savingDirect ? 'Saving...' : 'Save Direct Application'}
                     </button>
 
-                    <button
-                      onClick={() => setShowDirectForm(false)}
-                      style={{
-                        background: 'transparent',
-                        color: '#f8fafc',
-                        padding: '14px 20px',
-                        fontWeight: 800,
-                        fontSize: '12px',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.08em',
-                        border: '1px solid rgba(255,255,255,0.16)',
-                        cursor: 'pointer',
-                      }}
-                    >
+                    <button onClick={() => setShowDirectForm(false)} style={secondaryButton}>
                       Cancel
                     </button>
                   </div>
 
-                  {directMessage && (
-                    <div style={{ color: '#86efac', fontSize: '14px' }}>{directMessage}</div>
-                  )}
-
-                  {directError && (
-                    <div style={{ color: '#fca5a5', fontSize: '14px' }}>{directError}</div>
-                  )}
+                  {directMessage && <div style={{ color: '#86efac', fontSize: '14px' }}>{directMessage}</div>}
+                  {directError && <div style={{ color: '#fca5a5', fontSize: '14px' }}>{directError}</div>}
                 </div>
               </div>
             )}
@@ -521,53 +448,16 @@ export default function DashboardPage() {
                 { label: 'Offers', value: offerCount },
               ].map((item) => (
                 <div key={item.label} style={metricCardStyle}>
-                  <div
-                    style={{
-                      color: '#94a3b8',
-                      fontSize: '11px',
-                      fontWeight: 700,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.12em',
-                      marginBottom: '10px',
-                    }}
-                  >
-                    {item.label}
-                  </div>
-                  <div style={{ fontSize: '34px', fontWeight: 800, letterSpacing: '-0.04em' }}>
-                    {item.value}
-                  </div>
+                  <div style={metricLabelStyle}>{item.label}</div>
+                  <div style={metricValueStyle}>{item.value}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          <div
-            style={{
-              border: '1px solid rgba(255,255,255,0.1)',
-              background: '#05080d',
-              padding: '22px',
-              boxShadow: '0 24px 80px rgba(0,0,0,0.45)',
-            }}
-          >
-            <div
-              style={{
-                border: '1px solid rgba(255,255,255,0.08)',
-                padding: '28px',
-                background: 'linear-gradient(180deg, #070b12 0%, #03060b 100%)',
-              }}
-            >
-              <div
-                style={{
-                  color: '#94a3b8',
-                  fontSize: '11px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.12em',
-                  marginBottom: '18px',
-                }}
-              >
-                Live Application Snapshot
-              </div>
+          <div style={heroPanelStyle}>
+            <div style={heroInnerStyle}>
+              <div style={panelHeading}>Live Application Snapshot</div>
 
               <div
                 style={{
@@ -594,14 +484,7 @@ export default function DashboardPage() {
                 and how your pipeline is progressing.
               </div>
 
-              <div
-                style={{
-                  height: '10px',
-                  background: 'rgba(255,255,255,0.08)',
-                  marginBottom: '10px',
-                  overflow: 'hidden',
-                }}
-              >
+              <div style={progressTrack}>
                 <div
                   style={{
                     width: `${Math.min(100, Math.max(8, totalApplications * 8))}%`,
@@ -611,17 +494,7 @@ export default function DashboardPage() {
                 />
               </div>
 
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  color: '#94a3b8',
-                  fontSize: '12px',
-                  fontWeight: 700,
-                  textTransform: 'uppercase',
-                  letterSpacing: '0.08em',
-                }}
-              >
+              <div style={heroFooterStyle}>
                 <span>Search Active</span>
                 <span>Visibility Enabled</span>
               </div>
@@ -641,69 +514,10 @@ export default function DashboardPage() {
                 marginBottom: '18px',
               }}
             >
-              <div style={panelStyle}>
-                <div style={panelHeading}>Applications by Company</div>
-                <div style={{ display: 'grid', gap: '10px' }}>
-                  {companyCounts.length === 0 ? (
-                    <div style={emptyStyle}>No company data yet.</div>
-                  ) : (
-                    companyCounts.map((item) => (
-                      <div key={item.label} style={rowStyle}>
-                        <span>{item.label}</span>
-                        <strong>{item.count}</strong>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-
-              <div style={panelStyle}>
-                <div style={panelHeading}>Applications by Location</div>
-                <div style={{ display: 'grid', gap: '10px' }}>
-                  {locationCounts.length === 0 ? (
-                    <div style={emptyStyle}>No location data yet.</div>
-                  ) : (
-                    locationCounts.map((item) => (
-                      <div key={item.label} style={rowStyle}>
-                        <span>{item.label}</span>
-                        <strong>{item.count}</strong>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-
-              <div style={panelStyle}>
-                <div style={panelHeading}>Applications by Status</div>
-                <div style={{ display: 'grid', gap: '10px' }}>
-                  {statusCounts.length === 0 ? (
-                    <div style={emptyStyle}>No status data yet.</div>
-                  ) : (
-                    statusCounts.map((item) => (
-                      <div key={item.label} style={rowStyle}>
-                        <span>{item.label}</span>
-                        <strong>{item.count}</strong>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-
-              <div style={panelStyle}>
-                <div style={panelHeading}>Applications by Source</div>
-                <div style={{ display: 'grid', gap: '10px' }}>
-                  {sourceCounts.length === 0 ? (
-                    <div style={emptyStyle}>No source data yet.</div>
-                  ) : (
-                    sourceCounts.map((item) => (
-                      <div key={item.label} style={rowStyle}>
-                        <span>{item.label}</span>
-                        <strong>{item.count}</strong>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
+              <AnalyticsBarChart title="Applications by Company" items={companyCounts} emptyText="No company data yet." />
+              <AnalyticsBarChart title="Applications by Location" items={locationCounts} emptyText="No location data yet." />
+              <AnalyticsBarChart title="Applications by Status" items={statusCounts} emptyText="No status data yet." />
+              <AnalyticsBarChart title="Applications by Source" items={sourceCounts} emptyText="No source data yet." />
             </div>
 
             <div style={panelStyle}>
@@ -731,30 +545,11 @@ export default function DashboardPage() {
                 <div style={emptyStyle}>No applications yet.</div>
               ) : (
                 <div style={{ overflowX: 'auto' }}>
-                  <table
-                    style={{
-                      width: '100%',
-                      borderCollapse: 'collapse',
-                      color: '#f8fafc',
-                    }}
-                  >
+                  <table style={tableStyle}>
                     <thead>
                       <tr>
                         {['Company', 'Role', 'Location', 'Source', 'Status', 'Applied'].map((heading) => (
-                          <th
-                            key={heading}
-                            style={{
-                              textAlign: 'left',
-                              padding: '12px 10px',
-                              borderBottom: '1px solid rgba(255,255,255,0.08)',
-                              color: '#94a3b8',
-                              fontSize: '11px',
-                              textTransform: 'uppercase',
-                              letterSpacing: '0.12em',
-                            }}
-                          >
-                            {heading}
-                          </th>
+                          <th key={heading} style={tableHeadingStyle}>{heading}</th>
                         ))}
                       </tr>
                     </thead>
@@ -785,6 +580,55 @@ export default function DashboardPage() {
   );
 }
 
+const inputStyle: React.CSSProperties = {
+  width: '100%',
+  padding: '14px',
+  background: '#0b1118',
+  color: '#fff',
+  border: '1px solid rgba(255,255,255,0.12)',
+  boxSizing: 'border-box',
+};
+
+const metricCardStyle: React.CSSProperties = {
+  border: '1px solid rgba(255,255,255,0.08)',
+  background: 'linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01))',
+  padding: '18px',
+};
+
+const metricLabelStyle: React.CSSProperties = {
+  color: '#94a3b8',
+  fontSize: '11px',
+  fontWeight: 700,
+  textTransform: 'uppercase',
+  letterSpacing: '0.12em',
+  marginBottom: '10px',
+};
+
+const metricValueStyle: React.CSSProperties = {
+  fontSize: '34px',
+  fontWeight: 800,
+  letterSpacing: '-0.04em',
+};
+
+const panelStyle: React.CSSProperties = {
+  border: '1px solid rgba(255,255,255,0.08)',
+  background: 'linear-gradient(180deg, rgba(9,12,18,0.98), rgba(5,8,13,0.98))',
+  padding: '22px',
+};
+
+const heroPanelStyle: React.CSSProperties = {
+  border: '1px solid rgba(255,255,255,0.1)',
+  background: '#05080d',
+  padding: '22px',
+  boxShadow: '0 24px 80px rgba(0,0,0,0.45)',
+};
+
+const heroInnerStyle: React.CSSProperties = {
+  border: '1px solid rgba(255,255,255,0.08)',
+  padding: '28px',
+  background: 'linear-gradient(180deg, #070b12 0%, #03060b 100%)',
+};
+
 const panelHeading: React.CSSProperties = {
   color: '#94a3b8',
   fontSize: '11px',
@@ -794,13 +638,21 @@ const panelHeading: React.CSSProperties = {
   marginBottom: '14px',
 };
 
-const rowStyle: React.CSSProperties = {
+const progressTrack: React.CSSProperties = {
+  height: '10px',
+  background: 'rgba(255,255,255,0.08)',
+  marginBottom: '10px',
+  overflow: 'hidden',
+};
+
+const heroFooterStyle: React.CSSProperties = {
   display: 'flex',
   justifyContent: 'space-between',
-  gap: '12px',
-  padding: '12px 0',
-  borderBottom: '1px solid rgba(255,255,255,0.06)',
-  color: '#e2e8f0',
+  color: '#94a3b8',
+  fontSize: '12px',
+  fontWeight: 700,
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
 };
 
 const emptyStyle: React.CSSProperties = {
@@ -813,6 +665,47 @@ const cellStyle: React.CSSProperties = {
   borderBottom: '1px solid rgba(255,255,255,0.06)',
   color: '#e2e8f0',
   fontSize: '14px',
+};
+
+const tableStyle: React.CSSProperties = {
+  width: '100%',
+  borderCollapse: 'collapse',
+  color: '#f8fafc',
+};
+
+const tableHeadingStyle: React.CSSProperties = {
+  textAlign: 'left',
+  padding: '12px 10px',
+  borderBottom: '1px solid rgba(255,255,255,0.08)',
+  color: '#94a3b8',
+  fontSize: '11px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.12em',
+};
+
+const primaryButton: React.CSSProperties = {
+  background: '#ffffff',
+  color: '#020406',
+  textDecoration: 'none',
+  padding: '14px 20px',
+  fontWeight: 800,
+  fontSize: '12px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
+  border: 'none',
+  cursor: 'pointer',
+};
+
+const secondaryButton: React.CSSProperties = {
+  background: 'transparent',
+  color: '#f8fafc',
+  padding: '14px 20px',
+  fontWeight: 800,
+  fontSize: '12px',
+  textTransform: 'uppercase',
+  letterSpacing: '0.08em',
+  border: '1px solid rgba(255,255,255,0.16)',
+  cursor: 'pointer',
 };
 
 const actionLinkPrimary: React.CSSProperties = {
