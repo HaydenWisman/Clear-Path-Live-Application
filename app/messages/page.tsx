@@ -311,13 +311,13 @@ function MessagesPageContent() {
   };
 
   return (
-    <main style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #020406 0%, #05080d 30%, #0a1017 100%)', color: '#f8fafc', fontFamily: 'Arial, sans-serif', padding: '32px' }}>
+    <main style={{ minHeight: '100vh', background: 'linear-gradient(180deg, #020406 0%, #05080d 30%, #0a1017 100%)', color: '#f8fafc', fontFamily: 'Arial, sans-serif', padding: 'clamp(16px, 3vw, 32px)' }}>
       <div style={{ maxWidth: '1320px', margin: '0 auto' }}>
         <div style={{ marginBottom: '24px' }}>
           <div style={{ color: '#94a3b8', fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.14em', marginBottom: '14px' }}>
             Messaging Surface
           </div>
-          <h1 style={{ fontSize: '64px', lineHeight: 0.95, letterSpacing: '-0.05em', margin: 0, fontWeight: 800 }}>
+          <h1 style={{ fontSize: 'clamp(32px, 6vw, 64px)', lineHeight: 0.95, letterSpacing: '-0.05em', margin: 0, fontWeight: 800 }}>
             Messages
           </h1>
         </div>
@@ -325,7 +325,7 @@ function MessagesPageContent() {
         {loading ? (
           <p style={{ color: '#94a3b8' }}>Loading messages...</p>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: '340px 1fr', gap: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px' }}>
             <div style={{ border: '1px solid rgba(255,255,255,0.08)', background: 'linear-gradient(180deg, rgba(9,12,18,0.98), rgba(5,8,13,0.98))', padding: '20px' }}>
               <div style={{ color: '#94a3b8', fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: '12px' }}>
                 Start Conversation
@@ -415,7 +415,7 @@ function MessagesPageContent() {
                         <div style={{ fontSize: '12px', color: '#94a3b8' }}>
                           {other?.role || 'user'}{other?.company ? ' · ' + other.company : ''}
                         </div>
-                        <div style={{ fontSize: '12px', color: '#cbd5e1', marginTop: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '200px' }}>
+                        <div style={{ fontSize: '12px', color: '#cbd5e1', marginTop: '4px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: 'min(200px, 42vw)' }}>
                           {conversation.lastMessage}
                         </div>
                       </div>
@@ -442,7 +442,7 @@ function MessagesPageContent() {
                         background: message.sender_id === userId ? '#ffffff' : 'rgba(255,255,255,0.04)',
                         color: message.sender_id === userId ? '#020406' : '#ffffff',
                         padding: '14px 16px',
-                        maxWidth: '72%',
+                        maxWidth: 'min(72%, 520px)',
                         border: message.sender_id === userId ? 'none' : '1px solid rgba(255,255,255,0.08)',
                       }}
                     >
@@ -483,8 +483,10 @@ function MessagesPageContent() {
 
 export default function MessagesPage() {
   return (
-    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#020406', color: '#f8fafc', padding: '32px', fontFamily: 'Arial, sans-serif' }}>Loading messages...</div>}>
+    <Suspense fallback={<div style={{ minHeight: '100vh', background: '#020406', color: '#f8fafc', padding: 'clamp(16px, 3vw, 32px)', fontFamily: 'Arial, sans-serif' }}>Loading messages...</div>}>
       <MessagesPageContent />
     </Suspense>
   );
 }
+
+

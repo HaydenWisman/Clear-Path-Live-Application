@@ -147,7 +147,7 @@ export default function JobsPage() {
         style={{
           maxWidth: '1440px',
           margin: '0 auto',
-          padding: '52px 32px 70px',
+          padding: 'clamp(24px, 4vw, 52px) clamp(18px, 3vw, 32px) 70px',
         }}
       >
         <div style={{ marginBottom: '22px' }}>
@@ -171,7 +171,7 @@ export default function JobsPage() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1.05fr 0.95fr',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
             gap: '40px',
             alignItems: 'start',
             marginBottom: '34px',
@@ -194,7 +194,7 @@ export default function JobsPage() {
 
             <h1
               style={{
-                fontSize: '72px',
+                fontSize: 'clamp(36px, 7vw, 72px)',
                 lineHeight: 0.95,
                 letterSpacing: '-0.05em',
                 margin: '0 0 14px',
@@ -249,7 +249,7 @@ export default function JobsPage() {
 
               <div
                 style={{
-                  fontSize: '54px',
+                  fontSize: 'clamp(28px, 5vw, 54px)',
                   fontWeight: 800,
                   letterSpacing: '-0.05em',
                   lineHeight: 0.95,
@@ -330,7 +330,7 @@ export default function JobsPage() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: '2fr 1.2fr 1fr 1fr',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
               gap: '12px',
             }}
           >
@@ -403,7 +403,7 @@ export default function JobsPage() {
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
               gap: '18px',
             }}
           >
@@ -461,7 +461,7 @@ export default function JobsPage() {
 
                   <div
                     style={{
-                      fontSize: '28px',
+                      fontSize: 'clamp(20px, 3.4vw, 28px)',
                       fontWeight: 800,
                       lineHeight: 1.05,
                       letterSpacing: '-0.03em',
@@ -571,3 +571,4 @@ export default function JobsPage() {
     </main>
   );
 }
+

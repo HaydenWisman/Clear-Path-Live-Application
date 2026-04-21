@@ -270,7 +270,7 @@ export default function DashboardPage() {
         style={{
           maxWidth: '1440px',
           margin: '0 auto',
-          padding: '56px 32px 70px',
+          padding: 'clamp(24px, 4vw, 56px) clamp(18px, 3vw, 32px) 70px',
         }}
       >
         <div
@@ -286,7 +286,7 @@ export default function DashboardPage() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1.1fr 0.9fr',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
             gap: '40px',
             alignItems: 'start',
             marginBottom: '42px',
@@ -309,7 +309,7 @@ export default function DashboardPage() {
 
             <h1
               style={{
-                fontSize: '78px',
+                fontSize: 'clamp(38px, 8vw, 78px)',
                 lineHeight: 0.94,
                 letterSpacing: '-0.05em',
                 margin: '0 0 10px',
@@ -337,7 +337,7 @@ export default function DashboardPage() {
             <p
               style={{
                 color: '#cbd5e1',
-                fontSize: '24px',
+                fontSize: 'clamp(18px, 2.8vw, 24px)',
                 lineHeight: 1.4,
                 maxWidth: '860px',
                 margin: '0 0 24px',
@@ -437,7 +437,7 @@ export default function DashboardPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
                 gap: '14px',
               }}
             >
@@ -461,7 +461,7 @@ export default function DashboardPage() {
 
               <div
                 style={{
-                  fontSize: '54px',
+                  fontSize: 'clamp(28px, 5vw, 54px)',
                   fontWeight: 800,
                   letterSpacing: '-0.05em',
                   lineHeight: 0.95,
@@ -509,7 +509,7 @@ export default function DashboardPage() {
             <div
               style={{
                 display: 'grid',
-                gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
                 gap: '18px',
                 marginBottom: '18px',
               }}
@@ -731,3 +731,4 @@ const actionLink: React.CSSProperties = {
   letterSpacing: '0.08em',
   border: '1px solid rgba(255,255,255,0.16)',
 };
+

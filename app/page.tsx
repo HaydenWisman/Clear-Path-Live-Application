@@ -16,7 +16,7 @@ export default function HomePage() {
         style={{
           maxWidth: '1440px',
           margin: '0 auto',
-          padding: '40px 32px 80px',
+          padding: 'clamp(22px, 4vw, 40px) clamp(18px, 3vw, 32px) 80px',
         }}
       >
         <header
@@ -67,7 +67,7 @@ export default function HomePage() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: '1.1fr 0.9fr',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
             gap: '44px',
             alignItems: 'start',
             marginBottom: '44px',
@@ -90,7 +90,7 @@ export default function HomePage() {
 
             <h1
               style={{
-                fontSize: '92px',
+                fontSize: 'clamp(44px, 9vw, 92px)',
                 lineHeight: 0.92,
                 letterSpacing: '-0.06em',
                 margin: '0 0 18px',
@@ -108,7 +108,7 @@ export default function HomePage() {
             <p
               style={{
                 color: '#cbd5e1',
-                fontSize: '24px',
+                fontSize: 'clamp(18px, 2.8vw, 24px)',
                 lineHeight: 1.45,
                 maxWidth: '840px',
                 margin: '0 0 26px',
@@ -167,7 +167,7 @@ export default function HomePage() {
 
               <div
                 style={{
-                  fontSize: '56px',
+                  fontSize: 'clamp(30px, 5vw, 56px)',
                   fontWeight: 800,
                   letterSpacing: '-0.05em',
                   lineHeight: 0.95,
@@ -217,7 +217,7 @@ export default function HomePage() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
             gap: '18px',
             marginBottom: '18px',
           }}
@@ -253,7 +253,7 @@ export default function HomePage() {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
             gap: '18px',
             marginBottom: '18px',
           }}
@@ -398,7 +398,7 @@ const eyebrowStyle: React.CSSProperties = {
 };
 
 const featureTitleStyle: React.CSSProperties = {
-  fontSize: '32px',
+  fontSize: 'clamp(24px, 4vw, 32px)',
   lineHeight: 1.05,
   letterSpacing: '-0.03em',
   margin: '0 0 12px',
@@ -413,7 +413,7 @@ const featureBodyStyle: React.CSSProperties = {
 };
 
 const sectionTitleStyle: React.CSSProperties = {
-  fontSize: '40px',
+  fontSize: 'clamp(26px, 4.5vw, 40px)',
   lineHeight: 1.05,
   letterSpacing: '-0.04em',
   margin: '0 0 12px',
@@ -428,7 +428,7 @@ const sectionBodyStyle: React.CSSProperties = {
 };
 
 const ctaTitleStyle: React.CSSProperties = {
-  fontSize: '42px',
+  fontSize: 'clamp(28px, 4.8vw, 42px)',
   lineHeight: 1.02,
   letterSpacing: '-0.04em',
   margin: '0 0 10px',
@@ -451,3 +451,4 @@ const snapshotRowStyle: React.CSSProperties = {
   borderBottom: '1px solid rgba(255,255,255,0.06)',
   color: '#e2e8f0',
 };
+
