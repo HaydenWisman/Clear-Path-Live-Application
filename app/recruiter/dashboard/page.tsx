@@ -2,6 +2,12 @@
 
 import ProfileMenu from '@/components/ProfileMenu';
 import AnalyticsBarChart from '@/components/AnalyticsBarChart';
+import {
+  demoRecruiterApplications,
+  demoRecruiterJobs,
+  demoRecruiterProfile,
+  demoUnreadMessagesCount,
+} from '@/lib/demo/recruiterDemo';
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/client';
@@ -43,9 +49,26 @@ export default function RecruiterDashboardPage() {
   const [applications, setApplications] = useState<ApplicationRow[]>([]);
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [demoMode, setDemoMode] = useState(false);
 
   const loadRecruiterData = async () => {
     setLoading(true);
+
+    const demoEnabled =
+      typeof window !== 'undefined' &&
+      new URLSearchParams(window.location.search).get('demo') === '1';
+
+    setDemoMode(demoEnabled);
+
+    if (demoEnabled) {
+      setFullName(demoRecruiterProfile.fullName);
+      setCompany(demoRecruiterProfile.company);
+      setJobs(demoRecruiterJobs);
+      setApplications(demoRecruiterApplications);
+      setUnreadMessagesCount(demoUnreadMessagesCount);
+      setLoading(false);
+      return;
+    }
 
     const {
       data: { user },
@@ -179,6 +202,44 @@ export default function RecruiterDashboardPage() {
           <ProfileMenu />
         </div>
 
+        {demoMode && (
+          <div
+            style={{
+              marginBottom: '18px',
+              padding: '14px 16px',
+              border: '1px solid rgba(255,255,255,0.10)',
+              background: 'linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02))',
+              display: 'flex',
+              justifyContent: 'space-between',
+              gap: '16px',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  color: '#ffffff',
+                  fontWeight: 800,
+                  fontSize: '13px',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
+                  marginBottom: '4px',
+                }}
+              >
+                Recruiter Demo Mode Active
+              </div>
+              <div style={{ color: '#cbd5e1', fontSize: '14px' }}>
+                This view is using curated demo analytics so you can showcase the platform even without live recruiter data.
+              </div>
+            </div>
+
+            <Link href="/recruiter/dashboard" style={actionLink}>
+              Exit Demo Mode
+            </Link>
+          </div>
+        )}
+
         <div
           style={{
             display: 'grid',
@@ -285,7 +346,7 @@ export default function RecruiterDashboardPage() {
 
               <div style={heroFooterStyle}>
                 <span>Pipeline Active</span>
-                <span>Visibility Enabled</span>
+                <span>{demoMode ? 'Demo Ready' : 'Visibility Enabled'}</span>
               </div>
             </div>
           </div>
@@ -327,6 +388,7 @@ export default function RecruiterDashboardPage() {
               <AnalyticsBarChart title="Applications by Job" items={applicationsByJob} emptyText="No application data yet." />
               <AnalyticsBarChart title="Applications by Location" items={applicationsByLocation} emptyText="No location data yet." />
               <AnalyticsBarChart title="Jobs by Experience Level" items={jobsByLevel} emptyText="No job level data yet." />
+
               <div style={panelStyle}>
                 <div style={panelHeading}>Recruiter Summary</div>
 
@@ -355,13 +417,37 @@ export default function RecruiterDashboardPage() {
                     <Link href="/recruiter/jobs" style={actionLinkPrimary}>Manage Jobs</Link>
                     <Link href="/messages" style={actionLink}>Messages</Link>
                     <Link href="/profile" style={actionLink}>Profile</Link>
+                    <Link href="/recruiter/dashboard?demo=1" style={actionLink}>Demo Mode</Link>
                   </div>
                 </div>
               </div>
             </div>
 
             <div style={panelStyle}>
-              <div style={panelHeading}>Recent Job Postings</div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: '16px',
+                  marginBottom: '16px',
+                  flexWrap: 'wrap',
+                }}
+              >
+                <div style={panelHeading}>Recent Job Postings</div>
+
+                <div
+                  style={{
+                    color: '#94a3b8',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.12em',
+                  }}
+                >
+                  {demoMode ? 'Portfolio Showcase View' : 'Live Recruiter Data'}
+                </div>
+              </div>
 
               {recentJobs.length === 0 ? (
                 <div style={emptyStyle}>No jobs posted yet.</div>
