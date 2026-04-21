@@ -14,20 +14,21 @@ export default function GlobalHeader() {
         background: '#020406',
         position: 'sticky',
         top: 0,
-        zIndex: 50,
+        zIndex: 100,
       }}
     >
       <div
         style={{
           maxWidth: '1440px',
           margin: '0 auto',
-          padding: '14px clamp(18px, 3vw, 32px)',
+          padding: '14px 24px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
+          gap: '16px',
+          flexWrap: 'wrap',
         }}
       >
-        {/* LOGO */}
         <Link
           href="/"
           style={{
@@ -47,7 +48,6 @@ export default function GlobalHeader() {
           >
             Clear Path
           </span>
-
           <span
             style={{
               fontSize: '10px',
@@ -61,10 +61,9 @@ export default function GlobalHeader() {
           </span>
         </Link>
 
-        {/* NAV */}
-        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
           <NavLink href="/dashboard" label="Candidate" active={pathname === '/dashboard'} />
-          <NavLink href="/recruiter/dashboard" label="Recruiter" active={pathname?.includes('/recruiter')} />
+          <NavLink href="/recruiter/dashboard" label="Recruiter" active={pathname === '/recruiter/dashboard'} />
           <NavLink href="/messages" label="Messages" active={pathname === '/messages'} />
           <NavLink href="/profile" label="Profile" active={pathname === '/profile'} />
         </div>
@@ -73,15 +72,7 @@ export default function GlobalHeader() {
   );
 }
 
-function NavLink({
-  href,
-  label,
-  active,
-}: {
-  href: string;
-  label: string;
-  active?: boolean;
-}) {
+function NavLink({ href, label, active }) {
   return (
     <Link
       href={href}
@@ -97,7 +88,6 @@ function NavLink({
           : '1px solid rgba(255,255,255,0.16)',
         background: active ? '#ffffff' : 'transparent',
         color: active ? '#020406' : '#f8fafc',
-        transition: 'all 160ms ease',
       }}
     >
       {label}
