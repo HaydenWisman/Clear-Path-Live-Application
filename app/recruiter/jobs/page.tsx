@@ -63,17 +63,9 @@ export default function RecruiterJobsPage() {
       .eq('id', user.id)
       .maybeSingle();
 
-    if (!recruiterName) {
-      setRecruiterName(profileData?.full_name || '');
-    }
-
-    if (!recruiterEmail) {
-      setRecruiterEmail(profileData?.email || user.email || '');
-    }
-
-    if (!company) {
-      setCompany(profileData?.company || '');
-    }
+    if (!recruiterName) setRecruiterName(profileData?.full_name || '');
+    if (!recruiterEmail) setRecruiterEmail(profileData?.email || user.email || '');
+    if (!company) setCompany(profileData?.company || '');
 
     const { data, error } = await supabase
       .from('jobs')
@@ -180,90 +172,44 @@ export default function RecruiterJobsPage() {
           padding: 'clamp(24px, 4vw, 56px) clamp(18px, 3vw, 32px) 70px',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'flex-end',
-            marginBottom: '20px',
-          }}
-        >
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '20px' }}>
           <ProfileMenu />
         </div>
 
         <div style={{ marginBottom: '28px' }}>
-          <div
-            style={{
-              color: '#94a3b8',
-              fontSize: '12px',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.14em',
-              marginBottom: '16px',
-            }}
-          >
-            Recruiter Job Management
-          </div>
-
-          <h1
-            style={{
-              fontSize: 'clamp(38px, 8vw, 78px)',
-              lineHeight: 0.94,
-              letterSpacing: '-0.05em',
-              margin: '0 0 10px',
-              fontWeight: 800,
-            }}
-          >
+          <div style={eyebrow}>Recruiter Job Management</div>
+          <h1 style={titleStyle}>
             Post
             <br />
             new jobs
           </h1>
-
-          <p
-            style={{
-              color: '#cbd5e1',
-              fontSize: 'clamp(18px, 2.8vw, 24px)',
-              lineHeight: 1.4,
-              maxWidth: '900px',
-              margin: 0,
-            }}
-          >
+          <p style={subStyle}>
             Create recruiter job postings with company context, role details, work type, salary,
             qualifications, and recruiter contact information.
           </p>
         </div>
 
-        <form
-          onSubmit={handleCreateJob}
-          style={{
-            border: '1px solid rgba(255,255,255,0.08)',
-            background: 'linear-gradient(180deg, rgba(9,12,18,0.98), rgba(5,8,13,0.98))',
-            padding: '24px',
-            marginBottom: '24px',
-          }}
-        >
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-              gap: '14px',
-              marginBottom: '14px',
-            }}
-          >
+        <form onSubmit={handleCreateJob} style={formCard}>
+          <div style={gridStyle}>
             <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Job title*" style={inputStyle} />
             <input value={company} onChange={(e) => setCompany(e.target.value)} placeholder="Company name*" style={inputStyle} />
             <input value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Location*" style={inputStyle} />
+
             <select value={workType} onChange={(e) => setWorkType(e.target.value)} style={inputStyle}>
               <option>On-site</option>
               <option>Hybrid</option>
               <option>Remote</option>
             </select>
+
             <input value={salary} onChange={(e) => setSalary(e.target.value)} placeholder="Salary range" style={inputStyle} />
+
             <select value={experienceLevel} onChange={(e) => setExperienceLevel(e.target.value)} style={inputStyle}>
               <option>Entry</option>
               <option>Mid</option>
               <option>Senior</option>
               <option>Executive</option>
             </select>
+
             <input value={recruiterName} onChange={(e) => setRecruiterName(e.target.value)} placeholder="Recruiter name" style={inputStyle} />
             <input value={recruiterEmail} onChange={(e) => setRecruiterEmail(e.target.value)} placeholder="Recruiter email" style={inputStyle} />
           </div>
@@ -276,9 +222,26 @@ export default function RecruiterJobsPage() {
               style={inputStyle}
             />
 
-            <textarea value={jobSummary} onChange={(e) => setJobSummary(e.target.value)} placeholder="Job summary*" style={textareaStyle} />
-            <textarea value={companyHistory} onChange={(e) => setCompanyHistory(e.target.value)} placeholder="History about the company" style={textareaStyle} />
-            <textarea value={coreValues} onChange={(e) => setCoreValues(e.target.value)} placeholder="Core values" style={textareaStyle} />
+            <textarea
+              value={jobSummary}
+              onChange={(e) => setJobSummary(e.target.value)}
+              placeholder="Job summary*"
+              style={textareaStyle}
+            />
+
+            <textarea
+              value={companyHistory}
+              onChange={(e) => setCompanyHistory(e.target.value)}
+              placeholder="History about the company"
+              style={textareaStyle}
+            />
+
+            <textarea
+              value={coreValues}
+              onChange={(e) => setCoreValues(e.target.value)}
+              placeholder="Core values"
+              style={textareaStyle}
+            />
           </div>
 
           <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', marginTop: '16px' }}>
@@ -291,25 +254,8 @@ export default function RecruiterJobsPage() {
           {error && <div style={{ color: '#fca5a5', marginTop: '14px' }}>{error}</div>}
         </form>
 
-        <div
-          style={{
-            border: '1px solid rgba(255,255,255,0.08)',
-            background: 'linear-gradient(180deg, rgba(9,12,18,0.98), rgba(5,8,13,0.98))',
-            padding: '24px',
-          }}
-        >
-          <div
-            style={{
-              color: '#94a3b8',
-              fontSize: '11px',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.12em',
-              marginBottom: '14px',
-            }}
-          >
-            Your Posted Jobs
-          </div>
+        <div style={listCard}>
+          <div style={sectionLabel}>Your Posted Jobs</div>
 
           {loading ? (
             <p style={{ color: '#94a3b8' }}>Loading jobs...</p>
@@ -318,14 +264,7 @@ export default function RecruiterJobsPage() {
           ) : (
             <div style={{ display: 'grid', gap: '14px' }}>
               {jobs.map((job) => (
-                <div
-                  key={job.id}
-                  style={{
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    background: 'rgba(255,255,255,0.02)',
-                    padding: '18px',
-                  }}
-                >
+                <div key={job.id} style={jobCard}>
                   <div style={{ fontSize: '24px', fontWeight: 800, marginBottom: '6px' }}>{job.title}</div>
                   <div style={{ color: '#cbd5e1', marginBottom: '8px' }}>
                     {job.company} • {job.location} • {job.work_type || 'N/A'}
@@ -333,7 +272,12 @@ export default function RecruiterJobsPage() {
                   <div style={{ color: '#94a3b8', marginBottom: '8px' }}>
                     {job.salary || 'Salary not listed'} • {job.experience_level || 'Unknown level'}
                   </div>
-                  <div style={{ color: '#e2e8f0', lineHeight: 1.6 }}>{job.job_summary || 'No summary'}</div>
+                  <div style={{ color: '#e2e8f0', lineHeight: 1.6, marginBottom: '10px' }}>
+                    {job.job_summary || 'No summary'}
+                  </div>
+                  <div style={{ color: '#cbd5e1', fontSize: '14px' }}>
+                    Recruiter: {job.recruiter_name || 'Unknown'}{job.recruiter_email ? ` • ${job.recruiter_email}` : ''}
+                  </div>
                 </div>
               ))}
             </div>
@@ -343,6 +287,51 @@ export default function RecruiterJobsPage() {
     </main>
   );
 }
+
+const eyebrow: React.CSSProperties = {
+  color: '#94a3b8',
+  fontSize: '12px',
+  fontWeight: 700,
+  textTransform: 'uppercase',
+  letterSpacing: '0.14em',
+  marginBottom: '16px',
+};
+
+const titleStyle: React.CSSProperties = {
+  fontSize: 'clamp(38px, 8vw, 78px)',
+  lineHeight: 0.94,
+  letterSpacing: '-0.05em',
+  margin: '0 0 10px',
+  fontWeight: 800,
+};
+
+const subStyle: React.CSSProperties = {
+  color: '#cbd5e1',
+  fontSize: 'clamp(18px, 2.8vw, 24px)',
+  lineHeight: 1.4,
+  maxWidth: '900px',
+  margin: 0,
+};
+
+const formCard: React.CSSProperties = {
+  border: '1px solid rgba(255,255,255,0.08)',
+  background: 'linear-gradient(180deg, rgba(9,12,18,0.98), rgba(5,8,13,0.98))',
+  padding: '24px',
+  marginBottom: '24px',
+};
+
+const listCard: React.CSSProperties = {
+  border: '1px solid rgba(255,255,255,0.08)',
+  background: 'linear-gradient(180deg, rgba(9,12,18,0.98), rgba(5,8,13,0.98))',
+  padding: '24px',
+};
+
+const gridStyle: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+  gap: '14px',
+  marginBottom: '14px',
+};
 
 const inputStyle: React.CSSProperties = {
   width: '100%',
@@ -374,4 +363,19 @@ const primaryButton: React.CSSProperties = {
   letterSpacing: '0.08em',
   border: '1px solid #ffffff',
   cursor: 'pointer',
+};
+
+const sectionLabel: React.CSSProperties = {
+  color: '#94a3b8',
+  fontSize: '11px',
+  fontWeight: 700,
+  textTransform: 'uppercase',
+  letterSpacing: '0.12em',
+  marginBottom: '14px',
+};
+
+const jobCard: React.CSSProperties = {
+  border: '1px solid rgba(255,255,255,0.08)',
+  background: 'rgba(255,255,255,0.02)',
+  padding: '18px',
 };
